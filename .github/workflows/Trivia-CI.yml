@@ -25,6 +25,13 @@ jobs:
       with:
         path: Trivia 
         
+    - name: Clonación de Neurone-gm
+      uses: actions/checkout@master
+      with:
+        repository: trabajo-titulacion-neurone/modulo-neurone-gm
+        token: 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
+  
+        
     - run: ls
     
     - name: Use Node.js ${{ matrix.node-version }}
