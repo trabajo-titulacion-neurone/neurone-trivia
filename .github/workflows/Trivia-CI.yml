@@ -26,10 +26,11 @@ jobs:
         path: Trivia 
         
     - name: Clonación de Neurone-gm
-      uses: actions/checkout@main
+      uses: actions/checkout@v3
       with:
         repository: trabajo-titulacion-neurone/modulo-neurone-gm
         token: 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
+        path: neurone-gm
   
         
     - run: ls
