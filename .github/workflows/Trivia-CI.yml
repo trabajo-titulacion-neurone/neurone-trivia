@@ -21,13 +21,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        path: main 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: './Client/package-lock.json'
-    - run: cd Client && npm install
+    # - run: cd Client && npm install
     - run: ls
 
 
