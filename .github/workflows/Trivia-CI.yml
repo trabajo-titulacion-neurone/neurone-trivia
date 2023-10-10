@@ -26,7 +26,7 @@ jobs:
         path: Trivia 
         
     - name: Clonación de Neurone-gm
-      uses: actions/checkout@master
+      uses: actions/checkout@main
       with:
         repository: trabajo-titulacion-neurone/modulo-neurone-gm
         token: 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
