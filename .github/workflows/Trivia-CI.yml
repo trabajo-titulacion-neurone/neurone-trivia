@@ -50,9 +50,10 @@ jobs:
 
     - name: Instalar Neurone-gm
       working-directory: ./neurone-gm
-      run: ls
-      run: cd Client
-      run: ls
+      run: |
+        ls
+        cd Client 
+        ls
 
 
 
