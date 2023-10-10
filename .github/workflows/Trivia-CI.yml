@@ -37,17 +37,20 @@ jobs:
       with:
         repository: NEURONE-IL/neurone-auth
         path: neurone-auth
-        
-    - run: ls
-    
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: './trivia/Client/package-lock.json'
-    # - run: cd Client && npm install
-    - run: ls
+
+    - name: Instalar MongoDB con Docker
+      run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=neuroneAdmin -e MONGO_INITDB_ROOT_PASSWORD=admin -e MONGO_INITDB_DATABASE=neuronegm mongo:latest
+
+    - name: Instalar Neurone-gm
+      working-directory: ./neurone-gm
+      run: ls
 
 
 
