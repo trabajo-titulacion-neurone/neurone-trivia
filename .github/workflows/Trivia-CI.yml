@@ -29,7 +29,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: trabajo-titulacion-neurone/modulo-neurone-gm
-        # token: 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
+        # token: 
         path: neurone-gm
 
     - name: Clonación de Neurone-auth
@@ -45,11 +45,13 @@ jobs:
         cache: 'npm'
         cache-dependency-path: './trivia/Client/package-lock.json'
 
-    - name: Instalar MongoDB con Docker
-      run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=neuroneAdmin -e MONGO_INITDB_ROOT_PASSWORD=admin -e MONGO_INITDB_DATABASE=neuronegm mongo:latest
+    # - name: Instalar MongoDB con Docker
+    #   run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=neuroneAdmin -e MONGO_INITDB_ROOT_PASSWORD=admin -e MONGO_INITDB_DATABASE=neuronegm mongo:latest
 
     - name: Instalar Neurone-gm
       working-directory: ./neurone-gm
+      run: ls
+      run: cd Client
       run: ls
 
 
