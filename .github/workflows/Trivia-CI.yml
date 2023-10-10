@@ -23,15 +23,20 @@ jobs:
     - name: Clonación de repositorio de Trivia
       uses: actions/checkout@v3
       with:
-        path: Trivia 
+        path: trivia 
         
     - name: Clonación de Neurone-gm
       uses: actions/checkout@v3
       with:
         repository: trabajo-titulacion-neurone/modulo-neurone-gm
-        #token: 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
+        # token: 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
         path: neurone-gm
-  
+
+    - name: Clonación de Neurone-auth
+      uses: actions/checkout@v3
+      with:
+        repository: NEURONE-IL/neurone-auth
+        path: neurone-auth
         
     - run: ls
     
