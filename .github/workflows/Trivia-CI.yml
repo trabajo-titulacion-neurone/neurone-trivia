@@ -31,7 +31,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: './Client/package-lock.json'
+        cache-dependency-path: './Trivia/Client/package-lock.json'
     # - run: cd Client && npm install
     - run: ls
 
