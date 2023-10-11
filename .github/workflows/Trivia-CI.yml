@@ -53,6 +53,9 @@ jobs:
       
     - name: Instalar http-server globalmente (OPCIONAL)
       run: npm install -g http-server
+
+    - name: Instalar Angular globalmente
+      run: npm install -g @angular/cli
         
     - name: Instalar Neurone-gm
       working-directory: ./neurone-gm/Server
