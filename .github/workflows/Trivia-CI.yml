@@ -67,7 +67,7 @@ jobs:
       run: |
         ls
         npm install
-        sudo ng build --prod --output-path ../Server/public
+        ng build --prod --output-path ../Server/public
         
     - name: Instalar Trivia Backend
       working-directory: ./trivia/Server
