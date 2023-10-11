@@ -60,7 +60,7 @@ jobs:
         npm install
         # npm test
         pm2 start app.js --name neurone-gm
-        timeout 2s pm2 logs
+        # timeout 2s pm2 logs
 
     - name: Build Trivia Frontend
       working-directory: ./trivia/Client
@@ -75,7 +75,7 @@ jobs:
         npm install
         # npm test
         pm2 start app.js --name neurone-trivia
-        timeout 2s pm2 logs
+        # timeout 2s pm2 logs
 
     - name: Run Frontend
       working-directory: ./trivia/Server/public
