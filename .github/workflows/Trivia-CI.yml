@@ -49,10 +49,8 @@ jobs:
     #   run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=neuroneAdmin -e MONGO_INITDB_ROOT_PASSWORD=admin -e MONGO_INITDB_DATABASE=neuronegm mongo:latest
 
     - name: Instalar Neurone-gm
-      working-directory: ./neurone-gm
+      working-directory: ./neurone-gm/Server
       run: |
-        ls
-        cd Client 
         ls
 
 
