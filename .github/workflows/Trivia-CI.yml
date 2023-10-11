@@ -45,13 +45,49 @@ jobs:
         cache: 'npm'
         cache-dependency-path: './trivia/Client/package-lock.json'
 
-    # - name: Instalar MongoDB con Docker
-    #   run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=neuroneAdmin -e MONGO_INITDB_ROOT_PASSWORD=admin -e MONGO_INITDB_DATABASE=neuronegm mongo:latest
-
+    - name: Instalar MongoDB con Docker
+      run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=neuroneAdmin -e MONGO_INITDB_ROOT_PASSWORD=admin -e MONGO_INITDB_DATABASE=neuronegm mongo:latest
+   
+    - name: Instalar pm2 globalmente
+      run: npm install -g pm2
+      
+    - name: Instalar http-server globalmente (OPCIONAL)
+      run: npm install -g http-server
+        
     - name: Instalar Neurone-gm
       working-directory: ./neurone-gm/Server
       run: |
+        npm install
+        # npm test
+        pm2 start app.js --name neurone-gm
+        timeout 2s pm2 logs
+
+    - name: Build Trivia Frontend
+      working-directory: ./trivia/Client
+      run: |
         ls
+        npm install
+        sudo ng build --prod --output-path ../Server/public
+        
+    - name: Instalar Trivia Backend
+      working-directory: ./trivia/Server
+      run: |
+        npm install
+        # npm test
+        pm2 start app.js --name neurone-trivia
+        timeout 2s pm2 logs
+
+    - name: Run Frontend
+      working-directory: ./trivia/Server/public
+      run: http-server
+
+    - name: ls final
+      run: pm2 ls
+
+    - name: logs final
+      run: timeout 2s pm2 logs
+      
+
 
 
 
