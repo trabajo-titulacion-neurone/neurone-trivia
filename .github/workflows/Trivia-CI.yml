@@ -44,9 +44,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: './trivia/Client/package-lock.json'
-        
-    - name: nohup
-      run: nohup
       
     - name: Instalar MongoDB con Docker
       run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=neuroneAdmin -e MONGO_INITDB_ROOT_PASSWORD=admin -e MONGO_INITDB_DATABASE=neuronegm mongo:latest
@@ -85,14 +82,10 @@ jobs:
 
     - name: Run Frontend
       working-directory: ./trivia/Server/public
-      run: http-server
+      run: nohup http-server -p 8080 &
 
     - name: ls final
       run: pm2 ls
-
-    - name: logs final
-      run: timeout 2s pm2 logs
-      
 
 
 
