@@ -152,7 +152,7 @@ jobs:
       with:
         host: 147.182.216.100
         username: root
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        key: ${{ SSH_PRIVATE_KEY }}
         port: 22
         script: |
           echo "hola mundo estoy dentro del servidor"
