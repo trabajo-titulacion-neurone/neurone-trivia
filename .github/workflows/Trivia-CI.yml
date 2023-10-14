@@ -12,6 +12,7 @@ on:
 env:
   DROPLET_NAME: droplet-actions-neurone
   SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
+  SSH_KEY_ID: ${{ env.ID_CLAVE_SSH }}
 
 jobs:
   build:
@@ -121,14 +122,32 @@ jobs:
         doctl compute droplet create $DROPLET_NAME --image ubuntu-22-04-x64 --size s-1vcpu-1gb --region nyc1 --ssh-keys ${{ secrets.SSH_PRIVATE_KEY}}
 
 
+    # - name: Buscar clave SSH
+    #   run: |
+    #     # Verificar si la clave SSH 'key-gerardo' existe
+    #     if ! doctl compute ssh-key list --format "Name" | grep -q 'key-gerardo'; then
+    #       echo "La clave SSH 'key-gerardo' no se encontró. Creando nueva clave SSH..."
+    #       doctl compute ssh-key create key-gerardo --public-key "$SSH_PUBLIC_KEY"
+    #     else
+    #       echo "La clave SSH 'key-gerardo' ya existe."
+    #     fi
+
+
+    
     - name: Buscar clave SSH
       run: |
         # Verificar si la clave SSH 'key-gerardo' existe
-        if ! doctl compute ssh-key list --format "Name" | grep -q 'key-gerardo'; then
+        if doctl compute ssh-key list --format "ID,Name" | grep -q 'key-gerardo'; then
+          # Obtener el ID de la clave SSH 'key-gerardo'
+          SSH_KEY_ID=$(doctl compute ssh-key list --format "ID,Name" | grep 'key-gerardo' | awk '{print $1}')
+          echo "La clave SSH 'key-gerardo' ya existe con ID: $SSH_KEY_ID"
+          echo "ID_CLAVE_SSH=$SSH_KEY_ID" >> $GITHUB_ENV
+        else
           echo "La clave SSH 'key-gerardo' no se encontró. Creando nueva clave SSH..."
           doctl compute ssh-key create key-gerardo --public-key "$SSH_PUBLIC_KEY"
-        else
-          echo "La clave SSH 'key-gerardo' ya existe."
+          # Obtener el ID de la clave SSH recién creada
+          SSH_KEY_ID=$(doctl compute ssh-key list --format "ID,Name" | grep 'key-gerardo' | awk '{print $1}')
+          echo "Nueva clave SSH 'key-gerardo' creada con ID: $SSH_KEY_ID"
+          echo "ID_CLAVE_SSH=$SSH_KEY_ID" >> $GITHUB_ENV
         fi
-
 
