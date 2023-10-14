@@ -11,6 +11,7 @@ on:
 
 env:
   DROPLET_NAME: droplet-actions-neurone
+  SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
 
 jobs:
   build:
@@ -125,7 +126,7 @@ jobs:
         # Verificar si la clave SSH 'key-gerardo' existe
         if ! doctl compute ssh-key list --format "Name" | grep -q 'key-gerardo'; then
           echo "La clave SSH 'key-gerardo' no se encontró. Creando nueva clave SSH..."
-          doctl compute ssh-key create key-gerardo --public-key "$SSH_PUBLIC_KEY"
+          doctl compute ssh-key create key-gerardo --public-key $SSH_PUBLIC_KEY
         else
           echo "La clave SSH 'key-gerardo' ya existe."
         fi
