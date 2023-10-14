@@ -91,6 +91,7 @@ jobs:
       uses: digitalocean/action-doctl@v2
       with:
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
         
     - name: Create DigitalOcean Droplet
       run: doctl compute droplet create droplet-actions-neurone --image ubuntu-22-04-x64 --size s-1vcpu-1gb --region nyc1
