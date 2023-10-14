@@ -170,5 +170,6 @@ jobs:
           echo "SSH_KEY_ID =$(doctl compute ssh-key list --format "ID,Name" | grep 'key-gerardo' | awk '{print $1}')" >> $GITHUB_ENV
         fi
     - name: print SSH_KEY_ID
-      run: echo "${{ env.SSH_KEY_ID }} ENTREEEE"
+      run: doctl compute droplet create droplet-actions-neurone --image ubuntu-22-04-x64 --size s-1vcpu-1gb --region nyc1 --ssh-keys ${{ env.SSH_KEY_ID}}
+
 
