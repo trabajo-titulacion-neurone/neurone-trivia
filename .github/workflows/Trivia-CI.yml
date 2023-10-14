@@ -96,9 +96,6 @@ jobs:
       uses: digitalocean/action-doctl@v2
       with:
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-        
-    - name: printt SSH_KEY_ID
-      run: echo "la key es $SSH_KEY_ID y el nombre del droplet es $DROPLET_NAME"
       
     #Se verifica si el droplet o VPS a crear ya existe (se busca por nombre)
     - name: Check if the Droplet exists
@@ -169,6 +166,8 @@ jobs:
         if ! doctl compute ssh-key list --format "Name" | grep -q 'key-gerardo'; then
           echo "La clave SSH 'key-gerardo' no se encontró. Creando nueva clave SSH..."
           doctl compute ssh-key create key-gerardo --public-key "$SSH_PUBLIC_KEY"
+          echo "SSH_KEY_ID=$(doctl compute ssh-key list --format "ID,Name" | grep 'key-gerardo' | awk '{print $1}')" >> "$GITHUB_ENV"
+          echo "Clave SSH creada con éxito"
         else
           echo "La clave SSH 'key-gerardo' ya existe."
           echo "SSH_KEY_ID=$(doctl compute ssh-key list --format "ID,Name" | grep 'key-gerardo' | awk '{print $1}')" >> "$GITHUB_ENV"
