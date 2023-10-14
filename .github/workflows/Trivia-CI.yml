@@ -159,8 +159,6 @@ jobs:
 
 
 
-
-    
     - name: Buscar clave SSH
       run: |
         # Verificar si la clave SSH 'key-droplet' existe
