@@ -122,12 +122,12 @@ jobs:
         
     - name: Buscar clave SSH
       run: |
-        # Listar las claves SSH y buscar 'key-gerardo'
-        keys=$(doctl compute ssh-key list | awk '{print $2}')
-        if [[ $keys == *'key-gerardo'* ]]; then
-          echo "Se encontró la clave SSH 'key-gerardo'."
+        # Verificar si la clave SSH 'key-gerardo' existe
+        if ! doctl compute ssh-key list --format "Name" | grep -q 'key-gerardo'; then
+          echo "La clave SSH 'key-gerardo' no se encontró. Creando nueva clave SSH..."
+          doctl compute ssh-key create key-gerardo --public-key "$SSH_PUBLIC_KEY"
         else
-          echo "La clave SSH 'key-gerardo' no fue encontrada."
+          echo "La clave SSH 'key-gerardo' ya existe."
         fi
 
 
