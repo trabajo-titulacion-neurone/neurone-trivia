@@ -25,82 +25,75 @@ jobs:
       with:
         path: trivia 
         
-    - name: Clonación de Neurone-gm
-      uses: actions/checkout@v3
-      with:
-        repository: trabajo-titulacion-neurone/modulo-neurone-gm
-        # token: 
-        path: neurone-gm
+    # - name: Clonación de Neurone-gm
+    #   uses: actions/checkout@v3
+    #   with:
+    #     repository: trabajo-titulacion-neurone/modulo-neurone-gm
+    #     # token: 
+    #     path: neurone-gm
 
-    - name: Clonación de Neurone-auth
-      uses: actions/checkout@v3
-      with:
-        repository: NEURONE-IL/neurone-auth
-        path: neurone-auth
+    # - name: Clonación de Neurone-auth
+    #   uses: actions/checkout@v3
+    #   with:
+    #     repository: NEURONE-IL/neurone-auth
+    #     path: neurone-auth
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: './trivia/Client/package-lock.json'
+    # - name: Use Node.js ${{ matrix.node-version }}
+    #   uses: actions/setup-node@v3
+    #   with:
+    #     node-version: ${{ matrix.node-version }}
+    #     cache: 'npm'
+    #     cache-dependency-path: './trivia/Client/package-lock.json'
       
-    - name: Instalar MongoDB con Docker
-      run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=neuroneAdmin -e MONGO_INITDB_ROOT_PASSWORD=admin -e MONGO_INITDB_DATABASE=neuronegm mongo:latest
+    # - name: Instalar MongoDB con Docker
+    #   run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=neuroneAdmin -e MONGO_INITDB_ROOT_PASSWORD=admin -e MONGO_INITDB_DATABASE=neuronegm mongo:latest
    
-    - name: Instalar pm2 globalmente
-      run: npm install -g pm2
+    # - name: Instalar pm2 globalmente
+    #   run: npm install -g pm2
       
-    - name: Instalar http-server globalmente (OPCIONAL)
-      run: npm install -g http-server
+    # - name: Instalar http-server globalmente (OPCIONAL)
+    #   run: npm install -g http-server
 
-    - name: Instalar Angular globalmente
-      run: npm install -g @angular/cli
+    # - name: Instalar Angular globalmente
+    #   run: npm install -g @angular/cli
         
-    - name: Instalar Neurone-gm
-      working-directory: ./neurone-gm/Server
-      run: |
-        npm install
-        # npm test
-        pm2 start app.js --name neurone-gm
-        # timeout 2s pm2 logs
+    # - name: Instalar Neurone-gm
+    #   working-directory: ./neurone-gm/Server
+    #   run: |
+    #     npm install
+    #     # npm test
+    #     pm2 start app.js --name neurone-gm
+    #     # timeout 2s pm2 logs
 
-    - name: Build Trivia Frontend
-      working-directory: ./trivia/Client
-      run: |
-        ls
-        npm install
-        ng build --prod --output-path ../Server/public
+    # - name: Build Trivia Frontend
+    #   working-directory: ./trivia/Client
+    #   run: |
+    #     ls
+    #     npm install
+    #     ng build --prod --output-path ../Server/public
         
-    - name: Instalar Trivia Backend
-      working-directory: ./trivia/Server
-      run: |
-        npm install
-        # npm test
-        pm2 start app.js --name neurone-trivia
-        # timeout 2s pm2 logs
+    # - name: Instalar Trivia Backend
+    #   working-directory: ./trivia/Server
+    #   run: |
+    #     npm install
+    #     # npm test
+    #     pm2 start app.js --name neurone-trivia
+    #     # timeout 2s pm2 logs
 
-    - name: Run Frontend
-      working-directory: ./trivia/Server/public
-      run: nohup http-server -p 8080 &
+    # - name: Run Frontend
+    #   working-directory: ./trivia/Server/public
+    #   run: nohup http-server -p 8080 &
 
-    - name: ls final
-      run: pm2 ls
+    # - name: ls final
+    #   run: pm2 ls
+
+    - name: Install doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+    
 
 
 
 
 
-
-
-
-        
-    # - run: cd Server && npm install
-    # - run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=neuroneAdmin -e MONGO_INITDB_ROOT_PASSWORD=admin -e MONGO_INITDB_DATABASE=neuronegm mongo:latest
-    # - run: docker ps
-    # - run: npm install -g pm2
-    # - run: cd Server && npm install
-    # - run: cd Server && pm2 start app.js --name neurone-gm
-    #- run: pm2 logs
-    #- run: npm run build --if-present
-    #- run: cd Server && npm test
