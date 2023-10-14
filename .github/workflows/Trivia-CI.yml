@@ -12,6 +12,7 @@ on:
 env:
   DROPLET_NAME: droplet-actions-neurone
   SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
+  SSH_KEY_ID: ""
 
 jobs:
   build:
