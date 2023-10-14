@@ -10,7 +10,7 @@ on:
     branches: [ "main" ]
 
 env:
-  DROPLET_NAME: droplet-actions-neurone #Nombre que llevará el droplet a crear
+  DROPLET_NAME: droplet-actions-neurone-v2 #Nombre que llevará el droplet a crear
   SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }} #Clave publica de la maquina para conectarse al servidor
   SSH_KEY_ID: "" #ID que tendrá la clave publica agregada en el listado de claves de doctl
   SSH_KEY_NAME: key-droplet #Nombre que llevará la clave publica en doctl, se buscará si la clave existe de acuerdo con este nombre
