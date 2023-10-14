@@ -100,54 +100,54 @@ jobs:
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
         
 
-    # #Se busca con doctl si existe o no una clave con el nombre $SSH_KEY_NAME en la cuenta de digitalocean, en caso de que no, la crea subiendo la clave publica $SSH_PUBLIC_KEY.
-    # - name: Find or upload ssh key for digitalocean account
-    #   run: |
-    #     # Si la clave SSH con nombre 'key-droplet' no existe, se crea.
-    #     if ! doctl compute ssh-key list --format "Name" | grep -q $SSH_KEY_NAME; then
-    #       echo "La clave SSH $SSH_KEY_NAME no se encontró. Creando nueva clave SSH..."
-    #       doctl compute ssh-key create $SSH_KEY_NAME --public-key "$SSH_PUBLIC_KEY"
-    #       echo "Clave SSH creada con éxito"
-    #     #Sino, se imprime un mensaje por pantalla
-    #     else
-    #       echo "La clave SSH $SSH_KEY_NAME ya existe."
-    #     fi
-    #     #Se obtiene el ID de la clave para así agregarla al listado de claves permitidas del droplet a crear
-    #     echo "SSH_KEY_ID=$(doctl compute ssh-key list --format "ID,Name" | grep $SSH_KEY_NAME | awk '{print $1}')" >> "$GITHUB_ENV"
+    #Se busca con doctl si existe o no una clave con el nombre $SSH_KEY_NAME en la cuenta de digitalocean, en caso de que no, la crea subiendo la clave publica $SSH_PUBLIC_KEY.
+    - name: Find or upload ssh key for digitalocean account
+      run: |
+        # Si la clave SSH con nombre 'key-droplet' no existe, se crea.
+        if ! doctl compute ssh-key list --format "Name" | grep -q $SSH_KEY_NAME; then
+          echo "La clave SSH $SSH_KEY_NAME no se encontró. Creando nueva clave SSH..."
+          doctl compute ssh-key create $SSH_KEY_NAME --public-key "$SSH_PUBLIC_KEY"
+          echo "Clave SSH creada con éxito"
+        #Sino, se imprime un mensaje por pantalla
+        else
+          echo "La clave SSH $SSH_KEY_NAME ya existe."
+        fi
+        #Se obtiene el ID de la clave para así agregarla al listado de claves permitidas del droplet a crear
+        echo "SSH_KEY_ID=$(doctl compute ssh-key list --format "ID,Name" | grep $SSH_KEY_NAME | awk '{print $1}')" >> "$GITHUB_ENV"
         
-    # - name: print SSH_KEY_ID (BORRAR)
-    #   run: echo "la key es $SSH_KEY_ID y el nombre de la clave es $SSH_KEY_NAME"
+    - name: print SSH_KEY_ID (BORRAR)
+      run: echo "la key es $SSH_KEY_ID y el nombre de la clave es $SSH_KEY_NAME"
       
       
       
-    # #Se verifica si el droplet o VPS a crear ya existe (se busca por nombre)
-    # - name: Check if the Droplet exists
-    #   run: |
-    #     # Se obtiene el ID de un Droplet existente con nombre $DROPLET_NAME utilizando doctl y filtrando la salida con grep y awk.
-    #     droplet_id=$(doctl compute droplet list --format "ID,Name" --no-header | grep $DROPLET_NAME | awk '{print $1}')
+    #Se verifica si el droplet o VPS a crear ya existe (se busca por nombre)
+    - name: Check if the Droplet exists
+      run: |
+        # Se obtiene el ID de un Droplet existente con nombre $DROPLET_NAME utilizando doctl y filtrando la salida con grep y awk.
+        droplet_id=$(doctl compute droplet list --format "ID,Name" --no-header | grep $DROPLET_NAME | awk '{print $1}')
         
-    #     if [[ -z $droplet_id ]]; then
-    #       echo "Droplet does not exist" # Si el Droplet no existe, se imprime un mensaje
-    #       echo "create_droplet=true" >> $GITHUB_ENV # Se establece una salida personalizada "create_droplet" en "true"
-    #     else
-    #       echo "Droplet already exists" # Si el Droplet ya existe, se imprime un mensaje
-    #       echo "create_droplet=false" >> $GITHUB_ENV # Se establece una salida personalizada "create_droplet" en "false"
-    #     fi
+        if [[ -z $droplet_id ]]; then
+          echo "Droplet does not exist" # Si el Droplet no existe, se imprime un mensaje
+          echo "create_droplet=true" >> $GITHUB_ENV # Se establece una salida personalizada "create_droplet" en "true"
+        else
+          echo "Droplet already exists" # Si el Droplet ya existe, se imprime un mensaje
+          echo "create_droplet=false" >> $GITHUB_ENV # Se establece una salida personalizada "create_droplet" en "false"
+        fi
 
         
-    # # Si el droplet no existe, se crea.
-    # # Este paso se ejecutará solo si la salida personalizada "create_droplet" del paso anterior es 'true'
-    # - name: Create Droplet if it does not exist
-    #   if: env.create_droplet == 'true'
-    #   run: |
-    #     #Se crea un nuevo droplet con las siguientes caracteristicas
-    #     #Nombre: droplet-actions-neurone
-    #     #SO: Ubuntu 22.04 x64 LTS
-    #     #Region: Nueva York C1
-    #     doctl compute droplet create $DROPLET_NAME --image ubuntu-22-04-x64 --size s-1vcpu-1gb --region nyc1 --ssh-keys $SSH_KEY_ID
-
-
-    - name: multiple command
+    # Si el droplet no existe, se crea.
+    # Este paso se ejecutará solo si la salida personalizada "create_droplet" del paso anterior es 'true'
+    - name: Create Droplet if it does not exist
+      if: env.create_droplet == 'true'
+      run: |
+        #Se crea un nuevo droplet con las siguientes caracteristicas
+        #Nombre: droplet-actions-neurone
+        #SO: Ubuntu 22.04 x64 LTS
+        #Region: Nueva York C1
+        doctl compute droplet create $DROPLET_NAME --image ubuntu-22-04-x64 --size s-1vcpu-1gb --region nyc1 --ssh-keys $SSH_KEY_ID
+        
+    #Se realiza la conexión SSH con el servidor remoto creado
+    - name: SSH Connection with Server
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: 147.182.216.100
