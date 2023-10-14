@@ -93,8 +93,27 @@ jobs:
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
         
-    - name: Create DigitalOcean Droplet
-      run: doctl compute droplet create droplet-actions-neurone --image ubuntu-22-04-x64 --size s-1vcpu-1gb --region nyc1
+    # - name: Create DigitalOcean Droplet
+    #   run: doctl compute droplet create droplet-actions-neurone --image ubuntu-22-04-x64 --size s-1vcpu-1gb --region nyc1
+
+    - name: Check if the Droplet exists
+      id: check-droplet  # Identificador único para este paso
+      run: | 
+        droplet_id=$(doctl compute droplet list --format "ID,Name" --no-header | grep droplet-actions-neurone | awk '{print $1}')
+        # Se obtiene el ID de un Droplet existente con nombre "droplet-actions-neurone" utilizando doctl y filtrando la salida con grep y awk.
+        if [[ -z $droplet_id ]]; then
+          echo "Droplet does not exist"  # Si el Droplet no existe, se imprime un mensaje
+          echo "::set-output name=create_droplet::true"  # Se establece una salida personalizada "create_droplet" en "true"
+        else
+          echo "Droplet already exists"  # Si el Droplet ya existe, se imprime un mensaje
+          echo "::set-output name=create_droplet::false"  # Se establece una salida personalizada "create_droplet" en "false"
+        fi
+
+    - name: Create Droplet if it does not exist  # Nombre del segundo paso
+      if: steps.check-droplet.outputs.create_droplet == 'true'  # Este paso se ejecutará solo si la salida personalizada "create_droplet" del paso anterior es 'true'
+      run: |  # Comando que se ejecutará en este paso
+        doctl compute droplet create droplet-actions-neurone --image ubuntu-22-04-x64 --size s-1vcpu-1gb --region nyc1
+        # Se crea un nuevo Droplet si la salida del paso anterior fue 'true'
 
 
 
