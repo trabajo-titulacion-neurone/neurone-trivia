@@ -113,6 +113,7 @@ jobs:
         fi
 
     # Este paso se ejecutará solo si la salida personalizada "create_droplet" del paso anterior es 'true'
+    # Si el droplet no existe, se crea.
     - name: Create Droplet if it does not exist
       if: env.create_droplet == 'true'
       run: |
@@ -122,55 +123,20 @@ jobs:
         #Region: Nueva York C1
         doctl compute droplet create $DROPLET_NAME --image ubuntu-22-04-x64 --size s-1vcpu-1gb --region nyc1 --ssh-keys ${{ secrets.SSH_PRIVATE_KEY}}
 
-
-    # - name: Buscar clave SSH
-    #   run: |
-    #     # Verificar si la clave SSH 'key-droplet' existe
-    #     if ! doctl compute ssh-key list --format "Name" | grep -q 'key-gerardo'; then
-    #       echo "La clave SSH 'key-gerardo' no se encontró. Creando nueva clave SSH..."
-    #       doctl compute ssh-key create key-gerardo --public-key "$SSH_PUBLIC_KEY"
-    #     else
-    #       echo "La clave SSH 'key-gerardo' ya existe."
-    #     fi
-
-    
-    # - name: Buscar clave SSH
-    #   run: |
-    #     # Verificar si la clave SSH 'key-gerardo' existe
-    #     if doctl compute ssh-key list --format "ID,Name" | grep -q 'key-gerardo'; then
-    #       # Obtener el ID de la clave SSH 'key-gerardo'
-    #       SSH_KEY_ID=$(doctl compute ssh-key list --format "ID,Name" | grep 'key-gerardo' | awk '{print $1}')
-    #       echo "La clave SSH 'key-gerardo' ya existe con ID: $SSH_KEY_ID"
-    #       echo "ID_CLAVE_SSH=$SSH_KEY_ID" >> $GITHUB_ENV
-    #     else
-    #       echo "La clave SSH 'key-gerardo' no se encontró. Creando nueva clave SSH..."
-    #       doctl compute ssh-key create key-gerardo --public-key "$SSH_PUBLIC_KEY"
-    #       # Obtener el ID de la clave SSH recién creada
-    #       SSH_KEY_ID=$(doctl compute ssh-key list --format "ID,Name" | grep 'key-gerardo' | awk '{print $1}')
-    #       echo "Nueva clave SSH 'key-gerardo' creada con ID: $SSH_KEY_ID"
-    #       echo "ID_CLAVE_SSH=$SSH_KEY_ID" >> $GITHUB_ENV
-    #     fi
-
-
-
-
-
-
-
-
-
-    - name: Buscar clave SSH
+    #Se busca con doctl si existe o no una clave con el nombre $SSH_KEY_NAME, en caso de que no, la crea subiendo la clave publica $SSH_PUBLIC_KEY.
+    - name: Find or upload ssh key for digitalocean account
       run: |
-        # Verificar si la clave SSH 'key-droplet' existe
+        # Si la clave SSH con nombre 'key-droplet' no existe, se crea.
         if ! doctl compute ssh-key list --format "Name" | grep -q $SSH_KEY_NAME; then
           echo "La clave SSH $SSH_KEY_NAME no se encontró. Creando nueva clave SSH..."
           doctl compute ssh-key create $SSH_KEY_NAME --public-key "$SSH_PUBLIC_KEY"
-          echo "SSH_KEY_ID=$(doctl compute ssh-key list --format "ID,Name" | grep $SSH_KEY_NAME | awk '{print $1}')" >> "$GITHUB_ENV"
           echo "Clave SSH creada con éxito"
+        #Sino, se imprime un mensaje por pantalla
         else
           echo "La clave SSH $SSH_KEY_NAME ya existe."
-          echo "SSH_KEY_ID=$(doctl compute ssh-key list --format "ID,Name" | grep $SSH_KEY_NAME | awk '{print $1}')" >> "$GITHUB_ENV"
         fi
+        #Se obtiene el ID de la clave para así agregarla al listado de claves permitidas del droplet a crear
+        echo "SSH_KEY_ID=$(doctl compute ssh-key list --format "ID,Name" | grep $SSH_KEY_NAME | awk '{print $1}')" >> "$GITHUB_ENV"
         
     - name: print SSH_KEY_ID
       run: echo "la key es $SSH_KEY_ID y el nombre de la clave es $SSH_KEY_NAME"
