@@ -12,7 +12,6 @@ on:
 env:
   DROPLET_NAME: droplet-actions-neurone
   SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
-  SSH_KEY_ID: holaa
 
 jobs:
   build:
@@ -168,7 +167,7 @@ jobs:
           doctl compute ssh-key create key-gerardo --public-key "$SSH_PUBLIC_KEY"
         else
           echo "La clave SSH 'key-gerardo' ya existe."
-          echo "SSH_KEY_ID =$(doctl compute ssh-key list --format "ID,Name" | grep 'key-gerardo' | awk '{print $1}')" >> "$GITHUB_ENV"
+          echo "SSH_KEY_ID=$(doctl compute ssh-key list --format "ID,Name" | grep 'key-gerardo' | awk '{print $1}')" >> "$GITHUB_ENV"
         fi
         
     - name: print SSH_KEY_ID
