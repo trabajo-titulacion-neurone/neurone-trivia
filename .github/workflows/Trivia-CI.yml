@@ -165,7 +165,7 @@ jobs:
       run: |
         # Verificar si la clave SSH 'key-droplet' existe
         if ! doctl compute ssh-key list --format "Name" | grep -q $SSH_KEY_NAME; then
-          echo "La clave SSH 'key-gerardo' no se encontró. Creando nueva clave SSH..."
+          echo "La clave SSH $SSH_KEY_NAME no se encontró. Creando nueva clave SSH..."
           doctl compute ssh-key create $SSH_KEY_NAME --public-key "$SSH_PUBLIC_KEY"
           echo "SSH_KEY_ID=$(doctl compute ssh-key list --format "ID,Name" | grep $SSH_KEY_NAME | awk '{print $1}')" >> "$GITHUB_ENV"
           echo "Clave SSH creada con éxito"
