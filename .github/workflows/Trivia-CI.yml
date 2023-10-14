@@ -147,18 +147,16 @@ jobs:
     #     doctl compute droplet create $DROPLET_NAME --image ubuntu-22-04-x64 --size s-1vcpu-1gb --region nyc1 --ssh-keys $SSH_KEY_ID
 
 
-    # - name: multiple command
-    #   uses: appleboy/ssh-action@v1.0.0
-    #   with:
-    #     host: 147.182.216.100
-    #     username: root
-    #     key: $SSH_PRIVATE_KEY
-    #     port: 22
-    #     script: |
-    #       echo "hola mundo estoy dentro del servidor"
-    #       mkdir CarpetaSSH
-    #       ls
+    - name: multiple command
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: 147.182.216.100
+        username: root
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
+        script: |
+          echo "hola mundo estoy dentro del servidor"
+          mkdir CarpetaSSH
+          ls
 
-    - name: SSH connection
-      run: ssh root@128.199.11.106
 
