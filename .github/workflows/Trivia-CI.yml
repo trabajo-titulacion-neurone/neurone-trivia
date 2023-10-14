@@ -170,6 +170,6 @@ jobs:
           echo "SSH_KEY_ID =$(doctl compute ssh-key list --format "ID,Name" | grep 'key-gerardo' | awk '{print $1}')" >> $GITHUB_ENV
         fi
     - name: print SSH_KEY_ID
-      run: echo "$SSH_KEY_ID"
+      run: echo "la key es $SSH_KEY_ID y el nombre del droplet es $DROPLET_NAME"
 
 
