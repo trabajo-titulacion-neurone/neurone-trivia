@@ -120,12 +120,14 @@ jobs:
         doctl compute droplet create $DROPLET_NAME --image ubuntu-22-04-x64 --size s-1vcpu-1gb --region nyc1 --ssh-keys ${{ secrets.SSH_PRIVATE_KEY}}
 
         
-    - name: Ejecutar comandos SSH
+    - name: Buscar clave SSH
       run: |
-        mkdir -p ~/.ssh
-        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh -o StrictHostKeyChecking=no root@174.138.37.155 "ls"
+        keys=$(echo "${{ steps.listar-claves.outputs.stdout }}" | awk '{print $2}')
+        if [[ $keys == *'key-gerardo'* ]]; then
+          echo "Se encontró la clave SSH 'key-gerardo'."
+        else
+          echo "La clave SSH 'key-gerardo' no fue encontrada."
+        fi
 
 
 
