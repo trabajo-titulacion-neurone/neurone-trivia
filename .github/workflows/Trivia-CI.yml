@@ -161,13 +161,13 @@ jobs:
     
     - name: Buscar clave SSH
       run: |
+        SSH_KEY_ID = $(doctl compute ssh-key list --format "ID,Name" | grep 'key-gerardo' | awk '{print $1}')
         # Verificar si la clave SSH 'key-gerardo' existe
         if ! doctl compute ssh-key list --format "Name" | grep -q 'key-gerardo'; then
           echo "La clave SSH 'key-gerardo' no se encontró. Creando nueva clave SSH..."
           doctl compute ssh-key create key-gerardo --public-key "$SSH_PUBLIC_KEY"
         else
           echo "La clave SSH 'key-gerardo' ya existe."
-          SSH_KEY_ID = $(doctl compute ssh-key list --format "ID,Name" | grep 'key-gerardo' | awk '{print $1}')
           echo "SSH_KEY_ID = $(doctl compute ssh-key list --format "ID,Name" | grep 'key-gerardo' | awk '{print $1}')" >> $GITHUB_ENV
         fi
     - name: print SSH_KEY_ID
