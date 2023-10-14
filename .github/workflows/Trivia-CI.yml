@@ -122,13 +122,12 @@ jobs:
         
     - name: Buscar clave SSH
       run: |
-        doctl compute ssh-key list
-        keys=$(echo "${{ steps.listar-claves.outputs.stdout }}" | awk '{print $2}')
+        # Listar las claves SSH y buscar 'key-gerardo'
+        keys=$(doctl compute ssh-key list | awk '{print $2}')
         if [[ $keys == *'key-gerardo'* ]]; then
           echo "Se encontró la clave SSH 'key-gerardo'."
         else
           echo "La clave SSH 'key-gerardo' no fue encontrada."
         fi
-
 
 
