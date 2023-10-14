@@ -96,7 +96,10 @@ jobs:
       uses: digitalocean/action-doctl@v2
       with:
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-
+        
+    - name: printt SSH_KEY_ID
+      run: echo "la key es $SSH_KEY_ID y el nombre del droplet es $DROPLET_NAME"
+      
     #Se verifica si el droplet o VPS a crear ya existe (se busca por nombre)
     - name: Check if the Droplet exists
       run: |
