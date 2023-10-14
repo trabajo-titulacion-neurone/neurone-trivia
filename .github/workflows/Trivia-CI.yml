@@ -120,6 +120,7 @@ jobs:
         #Region: Nueva York C1
         doctl compute droplet create $DROPLET_NAME --image ubuntu-22-04-x64 --size s-1vcpu-1gb --region nyc1 --ssh-keys ${{ secrets.SSH_PRIVATE_KEY}}
 
+
         
     - name: Buscar clave SSH
       run: |
