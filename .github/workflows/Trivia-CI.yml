@@ -149,6 +149,7 @@ jobs:
     #Se obtiene la IP del droplet con nombre DROPLET_NAME y se guarda en la variable de entorno DROPLET_IPV4
     - name: Get Public IPv4 address
       run: echo "DROPLET_IPV4=$(doctl compute droplet list --format "Name,Public IPv4" --no-header | grep $DROPLET_NAME | awk '{print $2}')" >> "$GITHUB_ENV"
+
         
     #Se realiza la conexión SSH con el servidor remoto creado
     - name: SSH Connection with Server
