@@ -11,6 +11,7 @@ on:
 
 env:
   DROPLET_NAME: droplet-actions-neurone-v2 #Nombre que llevará el droplet a crear
+  DROPLET_IPV4: "" #IPv4 que tendrá el droplet una vez creado
   SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }} #Clave publica de la maquina para conectarse al servidor
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY}} #Clave privada de la maquina para conectarse al servidor
   SSH_KEY_ID: "" #ID que tendrá la clave publica agregada en el listado de claves de doctl
@@ -144,12 +145,16 @@ jobs:
         #SO: Ubuntu 22.04 x64 LTS
         #Region: Nueva York C1
         doctl compute droplet create $DROPLET_NAME --image ubuntu-22-04-x64 --size s-1vcpu-1gb --region nyc1 --ssh-keys $SSH_KEY_ID
+
+    #Se obtiene la IP del droplet con nombre DROPLET_NAME y se guarda en la variable de entorno DROPLET_IPV4
+    - name: Get Public IPv4 address
+      run: echo "DROPLET_IPV4=$(doctl compute droplet list --format "Name,Public IPv4" --no-header | grep $DROPLET_NAME | awk '{print $2}')" >> "$GITHUB_ENV"
         
     #Se realiza la conexión SSH con el servidor remoto creado
     - name: SSH Connection with Server
       uses: appleboy/ssh-action@v1.0.0
       with:
-        host: 147.182.216.100
+        host: ${{ env.DROPLET_IPV4 }}
         username: root
         key: ${{ env.SSH_PRIVATE_KEY }}
         port: 22
