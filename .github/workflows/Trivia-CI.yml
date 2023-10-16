@@ -162,6 +162,8 @@ jobs:
         #Se crea el droplet
         echo "DROPLET_IPV4=$(doctl compute droplet list --format "Name,Public IPv4" --no-header | grep $DROPLET_NAME | awk '{print $2}')" >> "$GITHUB_ENV"
         
+    - name: Testing SSH connection
+      run: |
         #Se verifica si el droplet ya se encuentra activo realizando una conexion ssh de prueba
         for i in {1..3}; do
           echo "Intento $i de conexión SSH"
@@ -176,7 +178,6 @@ jobs:
           echo "Conexión SSH fallida después de 3 intentos."
           exit 1
         fi
-
         
     #Se realiza la conexión SSH con el servidor remoto creado
     - name: SSH Connection with Server
