@@ -159,11 +159,13 @@ jobs:
     #Se obtiene la IP del droplet con nombre DROPLET_NAME y se guarda en la variable de entorno DROPLET_IPV4
     - name: Get Public IPv4 address
       run: | 
+        #Se crea el droplet
         echo "DROPLET_IPV4=$(doctl compute droplet list --format "Name,Public IPv4" --no-header | grep $DROPLET_NAME | awk '{print $2}')" >> "$GITHUB_ENV"
         
+        #Se verifica si el droplet ya se encuentra activo realizando una conexion ssh de prueba
         for i in {1..3}; do
           echo "Intento $i de conexión SSH"
-          if ssh -o "StrictHostKeyChecking no" -i "$SSH_PRIVATE_KEY" root@${{ env.DROPLET_IPV4 }} 'echo "Conexión exitosa"'; then
+          if ssh -o "StrictHostKeyChecking no" -i "$SSH_PRIVATE_KEY" root@$DROPLET_IPV4 'echo "Conexión exitosa"'; then
             echo "Conexión exitosa"
             break
           fi
