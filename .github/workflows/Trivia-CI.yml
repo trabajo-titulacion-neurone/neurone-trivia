@@ -160,7 +160,7 @@ jobs:
     - name: Get Public IPv4 address
       run: | 
         echo "DROPLET_IPV4=$(doctl compute droplet list --format "Name,Public IPv4" --no-header | grep $DROPLET_NAME | awk '{print $2}')" >> "$GITHUB_ENV"
-        sleep 10 #se esperan unos segundos a que el servidor se haya terminado de crear para poder conectarse por ssh
+        sleep 17 #se esperan unos segundos a que el servidor se haya terminado de crear para poder conectarse por ssh
 
         
     #Se realiza la conexión SSH con el servidor remoto creado
