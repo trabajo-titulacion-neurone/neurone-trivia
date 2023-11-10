@@ -13,9 +13,9 @@ on:
 env:
   DROPLET_NAME: droplet-actions-neurone-v2 #Nombre que llevará el droplet a crear
   DROPLET_IPV4: "" #IPv4 que tendrá el droplet una vez creado
-  DIGITALOCEAN_ACCESS_TOKEN: "hola amigos"
+  DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
   SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }} #Clave publica de la maquina para conectarse al servidor
-  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY}} #Clave privada de la maquina para conectarse al servidor
+  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} #Clave privada de la maquina para conectarse al servidor
   SSH_KEY_ID: "" #ID que tendrá la clave publica agregada en el listado de claves de doctl
   SSH_KEY_NAME: key-droplet #Nombre que llevará la clave publica en doctl, se buscará si la clave existe de acuerdo con este nombre
 
@@ -67,14 +67,13 @@ jobs:
       #id: init
       run: terraform init
 
-    - name: Editar el archivo variables.tf
+    - name: Editar el archivo variables.tf para agregar token de digitalocean
       working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
       run: |
         # Obtener el token de DigitalOcean desde la variable de entorno de Actions
         digitalocean_token="${{ env.DIGITALOCEAN_ACCESS_TOKEN }}"
 
-        # Reemplazar el valor de default en la línea que contiene "variable "token_digitalocean"" en variables.tf
-        #sed -i 's/^\(\s*default\s*=\s*"\).*\(".*\)/\1'"$digitalocean_token"'\2/' variables.tf
+        # Reemplazar el valor de default en la variable digitalocean_token del archivo variables.tf
         sed -i '/variable "token_digitalocean" {/,/}/{s/^\(\s*default\s*=\s*"\).*\(".*\)/\1'"$digitalocean_token"'\2/}' variables.tf
 
     - name: cat variables.tf
@@ -85,8 +84,14 @@ jobs:
       working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
       run: terraform plan
 
+    - name: Create Droplet
+      working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
+      run: terraform apply
+
     - name: LS
       working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
       run: ls -a
+      
+      
     
       
