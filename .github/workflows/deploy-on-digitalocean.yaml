@@ -86,7 +86,7 @@ jobs:
 
     - name: Create Droplet
       working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
-      run: terraform apply
+      run: terraform apply -auto-approve
 
     - name: LS
       working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
