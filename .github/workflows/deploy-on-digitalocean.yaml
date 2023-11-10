@@ -17,7 +17,7 @@ env:
   SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }} #Clave publica de la maquina para conectarse al servidor
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} #Clave privada de la maquina para conectarse al servidor
   SSH_KEY_ID: "" #ID que tendrá la clave publica agregada en el listado de claves de doctl
-  SSH_KEY_NAME: key-droplet #Nombre que llevará la clave publica en doctl, se buscará si la clave existe de acuerdo con este nombre
+  SSH_KEY_NAME: local_public_key #Nombre que llevará la clave publica asociada a la cuenta de digitalocean, se buscará si la clave existe de acuerdo con este nombre
 
 jobs:
   deploy:
@@ -32,7 +32,6 @@ jobs:
     steps:
     - name: ssh-keygen
       run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
-
 
     - name: Copy ssh key of environment variables in local machine
       run: |
@@ -62,6 +61,11 @@ jobs:
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v2
 
+    - name: Install doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
     - name: Terraform Init
       working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
       #id: init
@@ -75,6 +79,19 @@ jobs:
 
         # Reemplazar el valor de default en la variable digitalocean_token del archivo variables.tf
         sed -i '/variable "token_digitalocean" {/,/}/{s/^\(\s*default\s*=\s*"\).*\(".*\)/\1'"$digitalocean_token"'\2/}' variables.tf
+
+
+    - name: Delete SSH_KEY on digitalocean if exists so that Terraform create it
+      run: |
+        # Si la clave SSH con nombre 'key-droplet' no existe, se imprime mensaje por pantalla
+        if ! doctl compute ssh-key list --format "Name" | grep -q $SSH_KEY_NAME; then
+          echo "La clave no existe por lo que se creará con Terraform"
+        #Si existe la clave, esta se borra
+        else
+          echo "La clave SSH $SSH_KEY_NAME ya existe."
+          echo "SSH_KEY_ID=$(doctl compute ssh-key list --format "ID,Name" | grep $SSH_KEY_NAME | awk '{print $1}')" >> "$GITHUB_ENV"
+          doctl compute ssh-key delete $SSH_KEY_ID
+        fi
 
     - name: cat variables.tf
       working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
