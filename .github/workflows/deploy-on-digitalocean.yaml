@@ -1,0 +1,67 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: deploy-on-digitalocean
+
+on:
+  # workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  DROPLET_NAME: droplet-actions-neurone-v2 #Nombre que llevará el droplet a crear
+  DROPLET_IPV4: "" #IPv4 que tendrá el droplet una vez creado
+  SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }} #Clave publica de la maquina para conectarse al servidor
+  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY}} #Clave privada de la maquina para conectarse al servidor
+  SSH_KEY_ID: "" #ID que tendrá la clave publica agregada en el listado de claves de doctl
+  SSH_KEY_NAME: key-droplet #Nombre que llevará la clave publica en doctl, se buscará si la clave existe de acuerdo con este nombre
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-22.04
+
+    strategy:
+      matrix:
+        node-version: [16.14.1]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - name: Clonación de repositorio de Trivia
+      uses: actions/checkout@v3
+      with:
+        path: trivia 
+        
+    - name: Clonación de Neurone-gm
+      uses: actions/checkout@v3
+      with:
+        repository: trabajo-titulacion-neurone/modulo-neurone-gm
+        # token: 
+        path: neurone-gm
+
+    - name: Clonación de neurone-deploy
+      uses: actions/checkout@v3
+      with:
+        repository: trabajo-titulacion-neurone/neurone-deploy
+        # token: 
+        path: neurone-deploy
+
+    - name: Install Terraform
+      uses: hashicorp/setup-terraform@v2
+
+    - name: Terraform Init
+      working-directory: ./neurone-deploy/trivia-deploy/terraform
+      #id: init
+      run: terraform init
+
+    - name: Terraform Plan
+      working-directory: ./neurone-deploy/trivia-deploy/terraform
+      run: terraform plan
+
+    - name: LS
+      working-directory: ./neurone-deploy/trivia-deploy/terraform
+      run: ls -a
+    
+      
