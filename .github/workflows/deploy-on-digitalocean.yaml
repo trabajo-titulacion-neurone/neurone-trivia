@@ -37,7 +37,7 @@ jobs:
       run: |
         echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
         echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 id_rsa
+        chmod 600 ~/.ssh/id_rsa
       
     - name: Clonación de repositorio de Trivia
       uses: actions/checkout@v3
