@@ -90,7 +90,7 @@ jobs:
         else
           echo "La clave SSH $SSH_KEY_NAME ya existe."
           echo "SSH_KEY_ID=$(doctl compute ssh-key list --format "ID,Name" | grep $SSH_KEY_NAME | awk '{print $1}')" >> "$GITHUB_ENV"
-          doctl compute ssh-key delete $SSH_KEY_ID
+          doctl compute ssh-key delete $(doctl compute ssh-key list --format "ID,Name" | grep $SSH_KEY_NAME | awk '{print $1}')
         fi
 
     - name: cat variables.tf
