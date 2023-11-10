@@ -79,7 +79,11 @@ jobs:
     - name: cat variables.tf
       working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
       run: cat variables.tf
-
+      
+    - name: Destroy ssh-key resource on digitalocean if exists
+      working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
+      run: terraform destroy 
+      
     - name: Terraform Plan
       working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
       run: terraform plan
