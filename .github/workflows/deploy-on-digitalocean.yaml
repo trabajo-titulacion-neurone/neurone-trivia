@@ -52,16 +52,16 @@ jobs:
       uses: hashicorp/setup-terraform@v2
 
     - name: Terraform Init
-      working-directory: ./neurone-deploy/trivia-deploy/terraform
+      working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
       #id: init
       run: terraform init
 
     - name: Terraform Plan
-      working-directory: ./neurone-deploy/trivia-deploy/terraform
+      working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
       run: terraform plan
 
     - name: LS
-      working-directory: ./neurone-deploy/trivia-deploy/terraform
+      working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
       run: ls -a
     
       
