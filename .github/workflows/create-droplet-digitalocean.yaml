@@ -136,7 +136,7 @@ jobs:
           webservers:
             hosts:
               mi_droplet_digitalocean:
-                ansible_host: 192.241.138.167
+                ansible_host: 157.230.230.83
                 ansible_user: root
             vars:
               ansible_python_interpreter: /usr/bin/python3
