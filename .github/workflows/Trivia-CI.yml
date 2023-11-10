@@ -4,10 +4,11 @@
 name: NEURONE-Trivia CI
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
+  # push:
+  #   branches: [ "main" ]
+  # pull_request:
+  #   branches: [ "main" ]
 
 env:
   DROPLET_NAME: droplet-actions-neurone-v2 #Nombre que llevará el droplet a crear
