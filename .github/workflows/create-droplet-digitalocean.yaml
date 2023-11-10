@@ -128,7 +128,7 @@ jobs:
         # Required, playbook filepath
         playbook: playbook.yaml
         # Optional, directory where playbooks live
-        # directory: ./
+        directory: ./neurone-deploy/trivia-deploy/ansible-deploy
         # Optional, SSH private key
         key: ${{secrets.SSH_PRIVATE_KEY}}
         # Optional, literal inventory file contents
@@ -156,4 +156,4 @@ jobs:
         #   --extra-vars hello=there
         #   --verbose
           
-        working-directory: ./neurone-deploy/trivia-deploy/ansible-deploy
+        # working-directory: ./neurone-deploy/trivia-deploy/ansible-deploy
