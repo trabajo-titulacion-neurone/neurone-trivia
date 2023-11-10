@@ -74,7 +74,7 @@ jobs:
         digitalocean_token="${{ env.DIGITALOCEAN_ACCESS_TOKEN }}"
 
         # Reemplazar el valor de default en la línea que contiene "variable "token_digitalocean"" en variables.tf
-        awk -v new_token="$digitalocean_token" '/variable "token_digitalocean"/ {gsub(/default = .*/, "default = \"" new_token "\"")}1' variables.tf > variables.tf.tmp && mv variables.tf.tmp variables.tf
+        sed -i 's/^\(\s*default\s*=\s*"\).*\(".*\)/\1'"$digitalocean_token"'\2/' variables.tf
 
     - name: cat variables.tf
       working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
