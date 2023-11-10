@@ -1,17 +1,17 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: deploy-on-digitalocean
+name: create-droplet-digitalocean
 
 on:
-  # workflow_dispatch:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
+  # push:
+  #   branches: [ "main" ]
+  # pull_request:
+  #   branches: [ "main" ]
 
 env:
-  DROPLET_NAME: droplet-actions-neurone-v2 #Nombre que llevará el droplet a crear
+  DROPLET_NAME: droplet-actions-neurone-v1 #Nombre que llevará el droplet a crear
   DROPLET_IPV4: "" #IPv4 que tendrá el droplet una vez creado
   DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
   SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }} #Clave publica de la maquina para conectarse al servidor
@@ -20,7 +20,7 @@ env:
   SSH_KEY_NAME: local_public_key #Nombre que llevará la clave publica asociada a la cuenta de digitalocean, se buscará si la clave existe de acuerdo con este nombre
 
 jobs:
-  deploy:
+  create-droplet:
 
     runs-on: ubuntu-22.04
 
@@ -37,19 +37,7 @@ jobs:
       run: |
         echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
         echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-      
-    - name: Clonación de repositorio de Trivia
-      uses: actions/checkout@v3
-      with:
-        path: trivia 
-        
-    - name: Clonación de Neurone-gm
-      uses: actions/checkout@v3
-      with:
-        repository: trabajo-titulacion-neurone/modulo-neurone-gm
-        # token: 
-        path: neurone-gm
+        chmod 600 ~/.ssh/id_rsa     
 
     - name: Clonación de neurone-deploy
       uses: actions/checkout@v3
@@ -100,14 +88,6 @@ jobs:
           doctl compute ssh-key delete $ssh_key_id --force
         fi
 
-    - name: cat variables.tf
-      working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
-      run: cat variables.tf
-      
-    - name: Destroy ssh-key resource on digitalocean if exists
-      working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
-      run: terraform destroy 
-      
     - name: Terraform Plan
       working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
       run: terraform plan
@@ -115,7 +95,3 @@ jobs:
     - name: Create Droplet
       working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
       run: terraform apply -auto-approve
-
-      
-    
-      
