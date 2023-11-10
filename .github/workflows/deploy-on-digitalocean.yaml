@@ -91,7 +91,7 @@ jobs:
     - name: LS
       working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
       run: ls -a
-      
+       
       
     
       
