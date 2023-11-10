@@ -71,7 +71,7 @@ jobs:
       #id: init
       run: terraform init
 
-    - name: Editar el archivo variables.tf para agregar token de digitalocean
+    - name: Edit the variables.tf file to add the DigitalOcean token and droplet name
       working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
       run: |
         # Obtener el token de DigitalOcean desde la variable de entorno de Actions
@@ -79,6 +79,10 @@ jobs:
 
         # Reemplazar el valor de default en la variable digitalocean_token del archivo variables.tf
         sed -i '/variable "token_digitalocean" {/,/}/{s/^\(\s*default\s*=\s*"\).*\(".*\)/\1'"$digitalocean_token"'\2/}' variables.tf
+
+        # Reemplazar el valor de default en la variable droplet_name del archivo variables.tf
+        droplet_name="${{ env.DROPLET_NAME }}"
+        sed -i '/variable "droplet_name" {/,/}/{s/^\(\s*default\s*=\s*"\).*\(".*\)/\1'"$droplet_name"'\2/}' variables.tf
 
 
     - name: Delete SSH_KEY on digitalocean if exists so that Terraform create it
@@ -90,6 +94,8 @@ jobs:
         else
           echo "La clave SSH $SSH_KEY_NAME ya existe."
           echo "SSH_KEY_ID=$(doctl compute ssh-key list --format "ID,Name" | grep $SSH_KEY_NAME | awk '{print $1}')" >> "$GITHUB_ENV"
+
+          #Se guarda la id de la key encontrada con el objetivo de ser borrada
           ssh_key_id="$(doctl compute ssh-key list --format "ID,Name" | grep $SSH_KEY_NAME | awk '{print $1}')"
           doctl compute ssh-key delete $ssh_key_id --force
         fi
@@ -110,10 +116,6 @@ jobs:
       working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
       run: terraform apply -auto-approve
 
-    - name: LS
-      working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
-      run: ls -a
-       
       
     
       
