@@ -29,7 +29,9 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    
+    - name: ssh-keygen
+      run: ssh-keygen -t rsa
+
     - name: Copy ssh key of environment variables in local machine
       run: |
         echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
