@@ -139,7 +139,7 @@ jobs:
         host: 157.245.130.194
         username: root
         #key: ${{ env.SSH_PRIVATE_KEY }}
-        key_path: /home/runner/.ssh/id_rsa
+        key_path: home/runner/.ssh/id_rsa
         passphrase: ${{ env.PASSPHRASE_SSH_PRIVATE_KEY }}
         port: 22
         source: "./trivia"
