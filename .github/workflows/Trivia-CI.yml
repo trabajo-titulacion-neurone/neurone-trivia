@@ -18,6 +18,7 @@ env:
   #SSH keys of Autorized Host to connect to pre-production server later
   SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }} #Clave publica de la maquina para conectarse al servidor
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY}} #Clave privada de la maquina para conectarse al servidor
+  PASSPHRASE_SSH_PRIVATE_KEY: "frase-random"
 
   #NEURONEGM Database information
   NEURONEGM_DATABASE: "neuronegm"
@@ -45,6 +46,19 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
+    
+    #Generate a pair of SSH keys that will be replaced later by the environment variable keys
+    - name: ssh-keygen
+      run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
+
+    - name: Copy ssh key of environment variables in local machine
+      run: |
+        echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+        echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        ssh-keygen -p -P "" -N "${{ env.PASSPHRASE_SSH_PRIVATE_KEY }}" -f ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa    
+
+        
     - name: Cloning Trivia Repository
       uses: actions/checkout@v3
       with:
@@ -122,7 +136,7 @@ jobs:
         host: 157.245.130.194
         username: root
         key: ${{ env.SSH_PRIVATE_KEY }}
-        passphrase: frase
+        passphrase: ${{ env.PASSPHRASE_SSH_PRIVATE_KEY }}
         port: 22
         source: "./trivia"
         target: "./escritorio"
