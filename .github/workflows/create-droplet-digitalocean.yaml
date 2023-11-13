@@ -11,25 +11,35 @@ on:
   #   branches: [ "main" ]
 
 env:
+
+#DigitalOcean Data
   DROPLET_NAME: droplet-actions-neurone-v1 #Nombre que llevará el droplet a crear
-  DROPLET_IPV4: "" #IPv4 que tendrá el droplet una vez creado
   DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-  SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }} #Clave publica de la maquina para conectarse al servidor
-  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} #Clave privada de la maquina para conectarse al servidor
-  SSH_KEY_ID: "" #ID que tendrá la clave publica agregada en el listado de claves de doctl
-  SSH_KEY_NAME: local_public_key #Nombre que llevará la clave publica asociada a la cuenta de digitalocean, se buscará si la clave existe de acuerdo con este nombre
+  #SSH_KEY_NAME: local_public_key #Nombre que llevará la clave publica asociada a la cuenta de digitalocean, se buscará si la clave existe de acuerdo con este nombre
+  FINGERPRINT_SSH_KEY_DIGITALOCEAN: dd:ca:b2:21:ed:6e:47:dd:12:22:58:c2:58:5d:77:e6
+  
+  #SSH Keys
+  #SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }} #Clave publica de la maquina para conectarse al servidor
+  #SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} #Clave privada de la maquina para conectarse al servidor
+
+  #Vars
+  #SSH_KEY_ID: "" #ID que tendrá la clave publica agregada en el listado de claves de doctl
+  #DROPLET_IPV4: "" #IPv4 que tendrá el droplet una vez creado
+  
 
 jobs:
-  # create-droplet:
+  create-droplet:
 
-  #   runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04
 
-  #   strategy:
-  #     matrix:
-  #       node-version: [16.14.1]
-  #       # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    # strategy:
+    #   matrix:
+    #     node-version: [16.14.1]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-  #   steps:
+    steps:
+    
+    # Generate a pair of SSH keys that will be replaced later by the environment variable keys
     # - name: ssh-keygen
     #   run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
 
@@ -39,121 +49,133 @@ jobs:
     #     echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
     #     chmod 600 ~/.ssh/id_rsa     
 
-    # - name: Clonación de neurone-deploy
-    #   uses: actions/checkout@v3
-    #   with:
-    #     repository: trabajo-titulacion-neurone/neurone-deploy
-    #     # token: 
-    #     path: neurone-deploy
-
-  #   - name: Install Terraform
-  #     uses: hashicorp/setup-terraform@v2
-
-  #   - name: Install doctl
-  #     uses: digitalocean/action-doctl@v2
-  #     with:
-  #       token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-
-  #   - name: Terraform Init
-  #     working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
-  #     #id: init
-  #     run: terraform init
-
-  #   - name: Edit the variables.tf file to add the DigitalOcean token and droplet name
-  #     working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
-  #     run: |
-  #       # Obtener el token de DigitalOcean desde la variable de entorno de Actions
-  #       digitalocean_token="${{ env.DIGITALOCEAN_ACCESS_TOKEN }}"
-
-  #       # Reemplazar el valor de default en la variable digitalocean_token del archivo variables.tf
-  #       sed -i '/variable "token_digitalocean" {/,/}/{s/^\(\s*default\s*=\s*"\).*\(".*\)/\1'"$digitalocean_token"'\2/}' variables.tf
-
-  #       # Reemplazar el valor de default en la variable droplet_name del archivo variables.tf
-  #       droplet_name="${{ env.DROPLET_NAME }}"
-  #       sed -i '/variable "droplet_name" {/,/}/{s/^\(\s*default\s*=\s*"\).*\(".*\)/\1'"$droplet_name"'\2/}' variables.tf
-
-
-  #   - name: Delete SSH_KEY on digitalocean if exists so that Terraform create it
-  #     run: |
-  #       # Si la clave SSH con nombre 'key-droplet' no existe, se imprime mensaje por pantalla
-  #       if ! doctl compute ssh-key list --format "Name" | grep -q $SSH_KEY_NAME; then
-  #         echo "La clave no existe por lo que se creará con Terraform"
-  #       #Si existe la clave, esta se borra
-  #       else
-  #         echo "La clave SSH $SSH_KEY_NAME ya existe."
-  #         echo "SSH_KEY_ID=$(doctl compute ssh-key list --format "ID,Name" | grep $SSH_KEY_NAME | awk '{print $1}')" >> "$GITHUB_ENV"
-
-  #         #Se guarda la id de la key encontrada con el objetivo de ser borrada
-  #         ssh_key_id="$(doctl compute ssh-key list --format "ID,Name" | grep $SSH_KEY_NAME | awk '{print $1}')"
-  #         doctl compute ssh-key delete $ssh_key_id --force
-  #       fi
-
-  #   - name: Terraform Plan
-  #     working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
-  #     run: terraform plan
-
-  #   - name: Create Droplet
-  #     working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
-  #     run: terraform apply -auto-approve
-
-
-
-
-      
-  deploy-with-ansible:
-  
-    runs-on: ubuntu-22.04
-    
-    steps:
-
-    - name: ssh-keygen
-      run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
-
-    - name: Copy ssh key of environment variables in local machine
-      run: |
-        echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
-        echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa     
-
-    - name: Clonación de neurone-deploy
+    - name: Cloning neurone-deploy repository.
       uses: actions/checkout@v3
       with:
         repository: trabajo-titulacion-neurone/neurone-deploy
         # token: 
         path: neurone-deploy
+
+    - name: Install Terraform
+      uses: hashicorp/setup-terraform@v2
+
+    # - name: Install doctl
+    #   uses: digitalocean/action-doctl@v2
+    #   with:
+    #     token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+    - name: Terraform Init
+      working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
+      #id: init
+      run: terraform init
+
+    - name: Edit the variables.tf file to add the DigitalOcean token and droplet name
+      working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
+      run: |
+      
+        # Reemplazar el valor de default en la variable digitalocean_token del archivo variables.tf
+        digitalocean_token="${{ env.DIGITALOCEAN_ACCESS_TOKEN }}"
+        sed -i '/variable "token_digitalocean" {/,/}/{s/^\(\s*default\s*=\s*"\).*\(".*\)/\1'"$digitalocean_token"'\2/}' variables.tf
+
+        # Reemplazar el valor de default en la variable droplet_name del archivo variables.tf
+        droplet_name="${{ env.DROPLET_NAME }}"
+        sed -i '/variable "droplet_name" {/,/}/{s/^\(\s*default\s*=\s*"\).*\(".*\)/\1'"$droplet_name"'\2/}' variables.tf
+
+        # Reemplazar el valor de default en la variable fingerprint_ssh_key_digitalocean del archivo variables.tf
+        fingerprint_ssh_key_digitalocean="${{ env.FINGERPRINT_SSH_KEY_DIGITALOCEAN }}"
+        sed -i '/variable "fingerprint_ssh_key_digitalocean" {/,/}/{s/^\(\s*default\s*=\s*"\).*\(".*\)/\1'["$fingerprint_ssh_key_digitalocean"]'\2/}' variables.tf
+
+    - name: Terraform Plan
+      working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
+      run: terraform plan
+
+    - name: Create Droplet
+      working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
+      run: terraform apply -auto-approve
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+  # deploy-with-ansible:
+  
+  #   runs-on: ubuntu-22.04
     
-    - name: Run playbook
-      uses: dawidd6/action-ansible-playbook@v2
-      with:
-        # Required, playbook filepath
-        playbook: playbook.yaml
-        # Optional, directory where playbooks live
-        directory: ./neurone-deploy/trivia-deploy/ansible-deploy
-        # Optional, SSH private key
-        key: ${{secrets.SSH_PRIVATE_KEY}}
-        # Optional, literal inventory file contents
-        inventory: |
-          webservers:
-            hosts:
-              mi_droplet_digitalocean:
-                ansible_host: 157.230.230.83
-                ansible_user: root
-            vars:
-              ansible_python_interpreter: /usr/bin/python3
-              ansible_user: root
+  #   steps:
+
+  #   - name: ssh-keygen
+  #     run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
+
+  #   - name: Copy ssh key of environment variables in local machine
+  #     run: |
+  #       echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+  #       echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+  #       chmod 600 ~/.ssh/id_rsa     
+
+  #   - name: Clonación de neurone-deploy
+  #     uses: actions/checkout@v3
+  #     with:
+  #       repository: trabajo-titulacion-neurone/neurone-deploy
+  #       # token: 
+  #       path: neurone-deploy
+    
+  #   - name: Run playbook
+  #     uses: dawidd6/action-ansible-playbook@v2
+  #     with:
+  #       # Required, playbook filepath
+  #       playbook: playbook.yaml
+  #       # Optional, directory where playbooks live
+  #       directory: ./neurone-deploy/trivia-deploy/ansible-deploy
+  #       # Optional, SSH private key
+  #       key: ${{secrets.SSH_PRIVATE_KEY}}
+  #       # Optional, literal inventory file contents
+  #       inventory: |
+  #         webservers:
+  #           hosts:
+  #             mi_droplet_digitalocean:
+  #               ansible_host: 157.230.230.83
+  #               ansible_user: root
+  #           vars:
+  #             ansible_python_interpreter: /usr/bin/python3
+  #             ansible_user: root
           
-        # Optional, SSH known hosts file content
-        # known_hosts: |
-        #   example.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
-        # # Optional, encrypted vault password
-        # vault_password: ${{secrets.VAULT_PASSWORD}}
-        # # Optional, galaxy requirements filepath
-        # requirements: galaxy-requirements.yml
-        # # Optional, additional flags to pass to ansible-playbook
-        # options: |
-        #   --inventory .hosts
-        #   --limit group1
-        #   --extra-vars hello=there
-        #   --verbose
+  #       # Optional, SSH known hosts file content
+  #       # known_hosts: |
+  #       #   example.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
+  #       # # Optional, encrypted vault password
+  #       # vault_password: ${{secrets.VAULT_PASSWORD}}
+  #       # # Optional, galaxy requirements filepath
+  #       # requirements: galaxy-requirements.yml
+  #       # # Optional, additional flags to pass to ansible-playbook
+  #       # options: |
+  #       #   --inventory .hosts
+  #       #   --limit group1
+  #       #   --extra-vars hello=there
+  #       #   --verbose
           
-        # working-directory: ./neurone-deploy/trivia-deploy/ansible-deploy
+  #       # working-directory: ./neurone-deploy/trivia-deploy/ansible-deploy
