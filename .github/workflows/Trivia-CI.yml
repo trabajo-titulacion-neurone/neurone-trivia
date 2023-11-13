@@ -219,6 +219,7 @@ jobs:
     #       echo "Droplet already exists" # Si el Droplet ya existe, se imprime un mensaje
     #       echo "create_droplet=false" >> $GITHUB_ENV # Se establece una salida personalizada "create_droplet" en "false"
     #     fi
+
    
     # # Si el droplet no existe, se crea.
     # # Este paso se ejecutará solo si la salida personalizada "create_droplet" del paso anterior es 'true'
