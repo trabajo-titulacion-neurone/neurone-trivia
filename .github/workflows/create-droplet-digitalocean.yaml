@@ -25,7 +25,7 @@ env:
   #Vars
   #SSH_KEY_ID: "" #ID que tendrá la clave publica agregada en el listado de claves de doctl
   #DROPLET_IPV4: "" #IPv4 que tendrá el droplet una vez creado
-  #WORKING_DIRECTORY = ./neurone-deploy/trivia-deploy/terraform-files/digitalocean
+  WORKING_DIRECTORY: ./neurone-deploy/trivia-deploy/terraform-files/digitalocean
   
 
 jobs:
