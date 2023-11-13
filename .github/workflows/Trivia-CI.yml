@@ -93,7 +93,7 @@ jobs:
         # timeout 2s pm2 logs
 
     - name: Run Trivia Server with pm2
-      working-directory: ${{ TRIVIA_SERVER_DIRECTORY }}
+      working-directory: ${{ env.TRIVIA_SERVER_DIRECTORY }}
       run: |
         npm install
         # npm test
