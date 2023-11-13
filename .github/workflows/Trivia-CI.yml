@@ -53,11 +53,11 @@ jobs:
 
     - name: Copy ssh key of environment variables in local machine
       run: |
-        ssh-keygen -p -P "" -N "${{ env.PASSPHRASE_SSH_PRIVATE_KEY }}" -f ~/.ssh/id_rsa
         echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
         echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        ssh-keygen -p -P "" -N "${{ env.PASSPHRASE_SSH_PRIVATE_KEY }}" -f ~/.ssh/id_rsa
   
-        chmod 600 ~/.ssh/id_rsa    
+        #chmod 600 ~/.ssh/id_rsa    
 
         
     - name: Cloning Trivia Repository
