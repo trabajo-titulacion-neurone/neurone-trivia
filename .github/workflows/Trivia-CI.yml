@@ -129,10 +129,8 @@ jobs:
       run: |
         touch archivo.txt
         pwd
-        cd /home/runner/
+        cd /home/runner/.ssh/
         ls -a
-        cd .ssh/
-        ls
     
 
     - name: ssh key with passphrase
