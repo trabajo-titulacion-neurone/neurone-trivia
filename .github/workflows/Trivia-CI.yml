@@ -36,6 +36,12 @@ env:
   TRIVIA_SERVER_DIRECTORY: "./trivia/Server"
   BUILD_TRIVIA_LOCAL_PATH_SOURCE: "./trivia/Server/public"
 
+  #Trivia deploy data
+  NEURONE_DEPLOY_REPOSITORY: "trabajo-titulacion-neurone/neurone-deploy"
+  NEURONE_DEPLOY_REPOSITORY_FOLDER_NAME: "neurone-deploy"
+  TRIVIA_DEPLOY_DIRECTORY: "./neurone-deploy/trivia-deploy"
+  TRIVIA_ANSIBLE_FILES_DIRECTORY: "./neurone-deploy/trivia-deploy/ansible-files"
+
   #Server Data
   SERVER_USERNAME: root
   SERVER_IPV4: 157.245.130.194
@@ -82,6 +88,13 @@ jobs:
         # token: 
         path: ${{ env.NEURONEGM_REPOSITORY_FOLDER_NAME }}
 
+    - name: Cloning neurone-deploy repository
+      uses: actions/checkout@v3
+      with:
+        repository: ${{ env.NEURONE_DEPLOY_REPOSITORY }}
+        # token: 
+        path: ${{ env.NEURONE_DEPLOY_REPOSITORY_FOLDER_NAME }}
+
     
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
@@ -122,7 +135,6 @@ jobs:
     - name: Build Trivia Frontend
       working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
       run: |
-        ls
         npm install
         ng build --prod --output-path ../Server/public
 
@@ -130,13 +142,24 @@ jobs:
     #   working-directory: ./trivia/Server/public
     #   run: nohup http-server -p 8080 &
 
-    # - name: creando public folder (BORRAR, SOLO ES DE PRUEBA)
-    #   working-directory: ./trivia/Server
-    #   run: |
-    #     mkdir public
-    #     cd public/
-    #     touch archivo.txt
-    
+
+
+
+    - name: Deploy on server using Ansible with neurone-deploy repository
+      uses: dawidd6/action-ansible-playbook@v2
+      with:
+        # Required, playbook filepath
+        playbook: playbook.yaml
+        
+        # Optional, directory where playbooks live
+        directory: ${{ env.TRIVIA_ANSIBLE_FILES_DIRECTORY }}
+        
+        # Optional, SSH private key
+        key: ${{secrets.SSH_PRIVATE_KEY}}
+
+        #by default the action will look for the inventory file as "inventory.yaml" or "inventory.ini"
+
+
 
     - name: Se envía al servidor el build de trivia por ssh
       uses: appleboy/scp-action@v0.1.4
@@ -154,8 +177,6 @@ jobs:
 
 
 
-
-#
 
 
 
