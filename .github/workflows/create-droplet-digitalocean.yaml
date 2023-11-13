@@ -84,7 +84,7 @@ jobs:
 
         # Reemplazar el valor de default en la variable fingerprint_ssh_key_digitalocean del archivo variables.tf
         fingerprint_ssh_key_digitalocean="${{ env.FINGERPRINT_SSH_KEY_DIGITALOCEAN }}"
-        sed -i '/variable "fingerprint_ssh_key_digitalocean" {/,/}/{s/^\(\s*default\s*=\s*"\).*\(".*\)/\1'["$fingerprint_ssh_key_digitalocean"]'\2/}' variables.tf
+        sed -i '/variable "fingerprint_ssh_key_digitalocean" {/,/}/{s/^\(\s*default\s*=\s*"\).*\(".*\)/\1'"$fingerprint_ssh_key_digitalocean"'\2/}' variables.tf
 
     - name: Terraform Plan
       working-directory: ${{ env.WORKING_DIRECTORY }}
