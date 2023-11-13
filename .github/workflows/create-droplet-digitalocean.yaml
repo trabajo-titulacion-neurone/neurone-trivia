@@ -25,6 +25,7 @@ env:
   #Vars
   #SSH_KEY_ID: "" #ID que tendrá la clave publica agregada en el listado de claves de doctl
   #DROPLET_IPV4: "" #IPv4 que tendrá el droplet una vez creado
+  #WORKING_DIRECTORY = ./neurone-deploy/trivia-deploy/terraform-files/digitalocean
   
 
 jobs:
@@ -65,12 +66,12 @@ jobs:
     #     token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
     - name: Terraform Init
-      working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
+      working-directory: ${{ env.WORKING_DIRECTORY }}
       #id: init
       run: terraform init
 
     - name: Edit the variables.tf file to add the DigitalOcean token and droplet name
-      working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
+      working-directory: ${{ env.WORKING_DIRECTORY }}
       run: |
       
         # Reemplazar el valor de default en la variable digitalocean_token del archivo variables.tf
@@ -86,11 +87,11 @@ jobs:
         sed -i '/variable "fingerprint_ssh_key_digitalocean" {/,/}/{s/^\(\s*default\s*=\s*"\).*\(".*\)/\1'[$fingerprint_ssh_key_digitalocean]'\2/}' variables.tf
 
     - name: Terraform Plan
-      working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
+      working-directory: ${{ env.WORKING_DIRECTORY }}
       run: terraform plan
 
     - name: Create Droplet
-      working-directory: ./neurone-deploy/trivia-deploy/terraform/digitalocean
+      working-directory: ${{ env.WORKING_DIRECTORY }}
       run: terraform apply -auto-approve
 
 
