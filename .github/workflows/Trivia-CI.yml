@@ -125,7 +125,7 @@ jobs:
         #passphrase: ${{ secrets.PASSPHRASE }}
         port: 22
         source: "./trivia/archivo.txt"
-        target: "~./escritorio"
+        target: "./escritorio"
 
 
 
