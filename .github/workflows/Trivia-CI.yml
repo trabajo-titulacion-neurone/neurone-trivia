@@ -127,12 +127,12 @@ jobs:
 
       
 
-    - name: crear archivo para enviar
+    - name: crear carpeta con archivo dentro para enviar
+      working-directory: ./trivia/Server
       run: |
+        mkdir CARPETA_RANDOM
+        cd CARPETA_RANDOM/
         touch archivo.txt
-        pwd
-        cd /home/runner/.ssh/
-        ls -a
     
 
     - name: ssh key with passphrase
