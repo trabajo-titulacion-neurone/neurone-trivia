@@ -33,7 +33,7 @@ env:
   TRIVIA_REPOSITORY_FOLDER_NAME: "trivia"
   TRIVIA_CLIENT_DIRECTORY: "./trivia/Client"
   TRIVIA_SERVER_DIRECTORY: "./trivia/Server"
-  BUILD_TRIVIA_LOCAL_PATH_SOURCE: "./trivia/Server/public"
+  BUILD_TRIVIA_LOCAL_PATH_SOURCE: "./trivia/Server"
 
   #Server Data
   SERVER_USERNAME: root
