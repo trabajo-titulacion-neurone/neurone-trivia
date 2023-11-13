@@ -145,8 +145,9 @@ jobs:
         #key_path: /home/runner/.ssh/id_rsa
         #passphrase: ${{ env.PASSPHRASE_SSH_PRIVATE_KEY }}
         port: 22
-        source: "~./CARPETA_RANDOM"
-        target: "./escritorio"
+        rm: true
+        source: "./trivia/Server/CARPETA_RANDOM"
+        target: "./escritorio/nose"
 
 
 
