@@ -4,11 +4,11 @@
 name: NEURONE-Trivia CI-CD
 
 on:
-  workflow_dispatch:
-  # push:
-  #   branches: [ "main" ]
-  # pull_request:
-  #   branches: [ "main" ]
+  # workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 env:
   #Dependencies Version
