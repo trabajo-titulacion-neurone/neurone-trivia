@@ -147,7 +147,7 @@ jobs:
         port: ${{ env.SSH_PORT }}
         source: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
         target: ${{ env.BUILD_TRIVIA_SERVER_PATH_TARGET }}
-        strip_components: 2
+        strip_components: 3
 
         #key_path: /home/runner/.ssh/id_rsa
         #passphrase: ${{ env.PASSPHRASE_SSH_PRIVATE_KEY }}
