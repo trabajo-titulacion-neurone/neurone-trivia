@@ -128,7 +128,7 @@ jobs:
     - name: crear archivo para enviar
       run: |
         touch archivo.txt
-        ls
+        ls -a
         cd .ssh/
         ls
     
