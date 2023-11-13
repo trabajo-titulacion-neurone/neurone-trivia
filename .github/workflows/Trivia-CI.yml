@@ -50,60 +50,103 @@ jobs:
       with:
         path: ${{ env.TRIVIA_REPOSITORY_FOLDER_NAME }} 
         
-    - name: Cloning Neurone-gm repository
-      uses: actions/checkout@v3
-      with:
-        repository: ${{ env.NEURONEGM_REPOSITORY }}
-        # token: 
-        path: ${{ env.NEURONEGM_REPOSITORY_FOLDER_NAME }}
+    # - name: Cloning Neurone-gm repository
+    #   uses: actions/checkout@v3
+    #   with:
+    #     repository: ${{ env.NEURONEGM_REPOSITORY }}
+    #     # token: 
+    #     path: ${{ env.NEURONEGM_REPOSITORY_FOLDER_NAME }}
 
     
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        # node-version: ${{ matrix.node-version }}
-        node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
-        cache-dependency-path: '${{ env.TRIVIA_CLIENT_DIRECTORY }}/package-lock.json'
+    # - name: Use Node.js ${{ matrix.node-version }}
+    #   uses: actions/setup-node@v3
+    #   with:
+    #     # node-version: ${{ matrix.node-version }}
+    #     node-version: ${{ env.NODE_VERSION }}
+    #     cache: 'npm'
+    #     cache-dependency-path: '${{ env.TRIVIA_CLIENT_DIRECTORY }}/package-lock.json'
       
-    - name: Run MongoDB with Docker
-      run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
+    # - name: Run MongoDB with Docker
+    #   run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
    
-    - name: Install pm2 globally
-      run: npm install -g pm2
+    # - name: Install pm2 globally
+    #   run: npm install -g pm2
       
-    - name: Install http-server globally (OPTIONAL)
-      run: npm install -g http-server
+    # - name: Install http-server globally (OPTIONAL)
+    #   run: npm install -g http-server
 
-    - name: Install Angular globally
-      run: npm install -g @angular/cli@${{env.ANGULAR_VERSION}}
+    # - name: Install Angular globally
+    #   run: npm install -g @angular/cli@${{env.ANGULAR_VERSION}}
         
-    - name: Run Neurone-gm Server with pm2
-      working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
-      run: |
-        npm install
-        # npm test
-        pm2 start app.js --name neurone-gm
-        # timeout 2s pm2 logs
+    # - name: Run Neurone-gm Server with pm2
+    #   working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
+    #   run: |
+    #     npm install
+    #     # npm test
+    #     pm2 start app.js --name neurone-gm
+    #     # timeout 2s pm2 logs
 
-    - name: Run Trivia Server with pm2
-      working-directory: ${{ env.TRIVIA_SERVER_DIRECTORY }}
-      run: |
-        npm install
-        # npm test
-        pm2 start app.js --name neurone-trivia
-        # timeout 2s pm2 logs
+    # - name: Run Trivia Server with pm2
+    #   working-directory: ${{ env.TRIVIA_SERVER_DIRECTORY }}
+    #   run: |
+    #     npm install
+    #     # npm test
+    #     pm2 start app.js --name neurone-trivia
+    #     # timeout 2s pm2 logs
 
-    - name: Build Trivia Frontend
-      working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
-      run: |
-        ls
-        npm install
-        ng build --prod --output-path ../Server/public
+    # - name: Build Trivia Frontend
+    #   working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
+    #   run: |
+    #     ls
+    #     npm install
+    #     ng build --prod --output-path ../Server/public
 
-    - name: Run Frontend (OPCIONAL)
-      working-directory: ./trivia/Server/public
-      run: nohup http-server -p 8080 &
+    # - name: Run Frontend (OPCIONAL)
+    #   working-directory: ./trivia/Server/public
+    #   run: nohup http-server -p 8080 &
+
+
+
+
+      
+
+    - name: crear archivo para enviar
+      working-directory: ./trivia
+      run: touch archivo.txt
+
+    - name: ssh key with passphrase
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: 157.245.130.194
+        username: root
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        #passphrase: ${{ secrets.PASSPHRASE }}
+        port: 22
+        source: "./trivia/archivo.txt"
+        target: "~./escritorio"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
