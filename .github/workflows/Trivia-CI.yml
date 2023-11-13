@@ -129,6 +129,7 @@ jobs:
       run: |
         touch archivo.txt
         pwd
+        cd /home/runner/
         ls -a
         cd .ssh/
         ls
