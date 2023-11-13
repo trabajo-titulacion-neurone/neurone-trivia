@@ -124,7 +124,7 @@ jobs:
         key: ${{ env.SSH_PRIVATE_KEY }}
         #passphrase: ${{ secrets.PASSPHRASE }}
         port: 22
-        source: "./trivia/archivo.txt"
+        source: "./trivia"
         target: "./escritorio"
 
 
