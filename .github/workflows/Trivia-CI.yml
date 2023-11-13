@@ -112,7 +112,9 @@ jobs:
 
     - name: crear archivo para enviar
       working-directory: ./trivia
-      run: touch archivo.txt
+      run: |
+        touch archivo.txt
+        ls
 
     - name: ssh key with passphrase
       uses: appleboy/scp-action@v0.1.4
