@@ -157,7 +157,9 @@ jobs:
         # Optional, SSH private key
         key: ${{secrets.SSH_PRIVATE_KEY}}
 
-        #by default the action will look for the inventory file as "inventory.yaml" or "inventory.ini"
+        # The name of the inventory file is indicated
+        options: |
+          --inventory inventory.yaml
 
 
 
