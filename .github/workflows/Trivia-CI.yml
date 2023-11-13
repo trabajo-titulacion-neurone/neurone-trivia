@@ -33,10 +33,6 @@ env:
   TRIVIA_CLIENT_DIRECTORY: "./trivia/Client"
   TRIVIA_SERVER_DIRECTORY: "./trivia/Server"
 
-  
-
-  
-
 
 jobs:
   build:
@@ -60,8 +56,6 @@ jobs:
         repository: ${{ env.NEURONEGM_REPOSITORY }}
         # token: 
         path: ${{ env.NEURONEGM_REPOSITORY_FOLDER_NAME }}
-
-
 
     
     - name: Use Node.js ${{ matrix.node-version }}
@@ -110,9 +104,6 @@ jobs:
     - name: Run Frontend (OPCIONAL)
       working-directory: ./trivia/Server/public
       run: nohup http-server -p 8080 &
-
-    - name: ls final
-      run: pm2 ls
 
 
 
