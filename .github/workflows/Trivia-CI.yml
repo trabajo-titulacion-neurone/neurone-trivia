@@ -69,7 +69,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: '${{ TRIVIA_CLIENT_DIRECTORY }}/package-lock.json'
+        cache-dependency-path: '${{ env.TRIVIA_CLIENT_DIRECTORY }}/package-lock.json'
       
     - name: Run MongoDB with Docker
       run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
