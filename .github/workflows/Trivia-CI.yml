@@ -130,9 +130,9 @@ jobs:
     - name: crear carpeta con archivo dentro para enviar
       working-directory: ./trivia/Server
       run: |
-        mkdir CARPETA_RANDOM
-        cd CARPETA_RANDOM/
-        touch archivo.txt
+        mkdir trivia/Server/CARPETA_RANDOM
+        touch trivia/Server/CARPETA_RANDOM/archivo.txt
+       
     
 
     - name: ssh key with passphrase
