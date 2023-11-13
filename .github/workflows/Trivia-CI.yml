@@ -130,6 +130,7 @@ jobs:
       run: |
         touch archivo.txt
         ls
+        which id_rsa
 
     - name: ssh key with passphrase
       uses: appleboy/scp-action@v0.1.4
