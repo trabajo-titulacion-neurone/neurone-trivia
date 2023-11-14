@@ -74,8 +74,6 @@ jobs:
         
       #ssh-keygen -p -P "" -N "${{ env.PASSPHRASE_SSH_PRIVATE_KEY }}" -f ~/.ssh/id_rsa
         
-
-        
     - name: Cloning Trivia Repository
       uses: actions/checkout@v3
       with:
@@ -148,19 +146,12 @@ jobs:
     - name: Deploy on server using Ansible with neurone-deploy repository
       uses: dawidd6/action-ansible-playbook@v2
       with:
-        # Required, playbook filepath
-        playbook: playbook.yaml
-        
-        # Optional, directory where playbooks live
-        directory: ${{ env.TRIVIA_ANSIBLE_FILES_DIRECTORY }}
-        
-        # Optional, SSH private key
-        key: ${{secrets.SSH_PRIVATE_KEY}}
-
+        playbook: playbook.yaml # Required, playbook filepath
+        directory: ${{ env.TRIVIA_ANSIBLE_FILES_DIRECTORY }} # Optional, directory where playbooks live
+        key: ${{secrets.SSH_PRIVATE_KEY}} # Optional, SSH private key
         # The name of the inventory file is indicated
         options: |
           --inventory inventory.yaml
-
 
 
     - name: Se envía al servidor el build de trivia por ssh
