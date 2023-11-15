@@ -4,11 +4,11 @@
 name: NEURONE-Trivia CI-CD
 
 on:
-  # workflow_dispatch:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
+  # push:
+  #   branches: [ "main" ]
+  # pull_request:
+  #   branches: [ "main" ]
 
 
 env:
@@ -44,7 +44,7 @@ env:
 
   #Server Data
   SERVER_USERNAME: root
-  SERVER_IPV4: 157.245.130.194
+  SERVER_IPV4: 64.227.3.38
   SSH_PORT: 22
   BUILD_TRIVIA_SERVER_PATH_TARGET: "./escritorio/neurone-trivia/Server"
 
