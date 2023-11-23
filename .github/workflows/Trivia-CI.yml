@@ -104,9 +104,6 @@ jobs:
    
     - name: Install pm2 globally
       run: npm install -g pm2
-      
-    - name: Install http-server globally (OPTIONAL)
-      run: npm install -g http-server
 
     - name: Install Angular globally
       run: npm install -g @angular/cli@${{env.ANGULAR_VERSION}}
@@ -117,7 +114,6 @@ jobs:
         npm install
         # npm test
         pm2 start app.js --name neurone-gm
-        # timeout 2s pm2 logs
 
     - name: Run Trivia Server with pm2
       working-directory: ${{ env.TRIVIA_SERVER_DIRECTORY }}
@@ -125,7 +121,6 @@ jobs:
         npm install
         # npm test
         pm2 start app.js --name neurone-trivia
-        # timeout 2s pm2 logs
 
     - name: Build Trivia Frontend
       working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
