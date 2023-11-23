@@ -85,12 +85,12 @@ jobs:
     #     # token: 
     #     path: ${{ env.NEURONEGM_REPOSITORY_FOLDER_NAME }}
 
-    # - name: Cloning neurone-deploy repository
-    #   uses: actions/checkout@v3
-    #   with:
-    #     repository: ${{ env.NEURONE_DEPLOY_REPOSITORY }}
-    #     # token: 
-    #     path: ${{ env.NEURONE_DEPLOY_REPOSITORY_FOLDER_NAME }}
+    - name: Cloning neurone-deploy repository
+      uses: actions/checkout@v3
+      with:
+        repository: ${{ env.NEURONE_DEPLOY_REPOSITORY }}
+        # token: 
+        path: ${{ env.NEURONE_DEPLOY_REPOSITORY_FOLDER_NAME }}
 
     
     # - name: Use Node.js ${{ env.NODE_VERSION }}
