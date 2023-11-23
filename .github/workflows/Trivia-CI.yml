@@ -43,9 +43,9 @@ env:
   TRIVIA_ANSIBLE_FILES_DIRECTORY: "./neurone-deploy/trivia-deploy/ansible-files"
 
   #Server Data
-  SERVER_USERNAME: root
+  SERVER_USERNAME: "gerardoluceroc"
   SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-  SERVER_IPV4: 64.227.17.30
+  SERVER_IPV4: 161.35.52.95
   SSH_PORT: 22
   BUILD_TRIVIA_SERVER_PATH_TARGET: "./apps/GAME/Server"
 
