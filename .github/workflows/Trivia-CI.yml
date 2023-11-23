@@ -73,10 +73,10 @@ jobs:
 
 
         
-    - name: Cloning Trivia Repository
-      uses: actions/checkout@v3
-      with:
-        path: ${{ env.TRIVIA_REPOSITORY_FOLDER_NAME }} 
+    # - name: Cloning Trivia Repository
+    #   uses: actions/checkout@v3
+    #   with:
+    #     path: ${{ env.TRIVIA_REPOSITORY_FOLDER_NAME }} 
         
     # - name: Cloning Neurone-gm repository
     #   uses: actions/checkout@v3
@@ -85,21 +85,21 @@ jobs:
     #     # token: 
     #     path: ${{ env.NEURONEGM_REPOSITORY_FOLDER_NAME }}
 
-    - name: Cloning neurone-deploy repository
-      uses: actions/checkout@v3
-      with:
-        repository: ${{ env.NEURONE_DEPLOY_REPOSITORY }}
-        # token: 
-        path: ${{ env.NEURONE_DEPLOY_REPOSITORY_FOLDER_NAME }}
+    # - name: Cloning neurone-deploy repository
+    #   uses: actions/checkout@v3
+    #   with:
+    #     repository: ${{ env.NEURONE_DEPLOY_REPOSITORY }}
+    #     # token: 
+    #     path: ${{ env.NEURONE_DEPLOY_REPOSITORY_FOLDER_NAME }}
 
     
-    - name: Use Node.js ${{ env.NODE_VERSION }}
-      uses: actions/setup-node@v3
-      with:
-        # node-version: ${{ matrix.node-version }}
-        node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
-        cache-dependency-path: '${{ env.TRIVIA_CLIENT_DIRECTORY }}/package-lock.json'
+    # - name: Use Node.js ${{ env.NODE_VERSION }}
+    #   uses: actions/setup-node@v3
+    #   with:
+    #     # node-version: ${{ matrix.node-version }}
+    #     node-version: ${{ env.NODE_VERSION }}
+    #     cache: 'npm'
+    #     cache-dependency-path: '${{ env.TRIVIA_CLIENT_DIRECTORY }}/package-lock.json'
       
     # - name: Run MongoDB with Docker
     #   run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
@@ -110,8 +110,8 @@ jobs:
     # - name: Install http-server globally (OPTIONAL)
     #   run: npm install -g http-server
 
-    - name: Install Angular globally
-      run: npm install -g @angular/cli@${{env.ANGULAR_VERSION}}
+    # - name: Install Angular globally
+    #   run: npm install -g @angular/cli@${{env.ANGULAR_VERSION}}
         
     # - name: Run Neurone-gm Server with pm2
     #   working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
@@ -129,11 +129,11 @@ jobs:
     #     pm2 start app.js --name neurone-trivia
     #     # timeout 2s pm2 logs
 
-    - name: Build Trivia Frontend
-      working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
-      run: |
-        npm install
-        ng build --prod --output-path ../Server/public
+    # - name: Build Trivia Frontend
+    #   working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
+    #   run: |
+    #     npm install
+    #     ng build --prod --output-path ../Server/public
 
 
 
@@ -155,20 +155,21 @@ jobs:
             vars:
               ansible_python_interpreter: /usr/bin/python3        
         options: |
-          --inventory inventory.yaml
+          # --inventory inventory.yaml
+          --extra-vars ansible_become_pass=${{ env.SERVER_PASSWORD }}
 
 
-    - name: Se envía al servidor el build de trivia por ssh
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ env.SERVER_IPV4 }}
-        username: ${{ env.SERVER_USERNAME }}
-        # password: ${{ env.SERVER_PASSWORD }}
-        key: ${{ env.SSH_PRIVATE_KEY }}
-        port: ${{ env.SSH_PORT }}
-        source: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
-        target: ${{ env.BUILD_TRIVIA_SERVER_PATH_TARGET }}
-        strip_components: 3
+    # - name: Se envía al servidor el build de trivia por ssh
+    #   uses: appleboy/scp-action@v0.1.4
+    #   with:
+    #     host: ${{ env.SERVER_IPV4 }}
+    #     username: ${{ env.SERVER_USERNAME }}
+    #     # password: ${{ env.SERVER_PASSWORD }}
+    #     key: ${{ env.SSH_PRIVATE_KEY }}
+    #     port: ${{ env.SSH_PORT }}
+    #     source: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
+    #     target: ${{ env.BUILD_TRIVIA_SERVER_PATH_TARGET }}
+    #     strip_components: 3
 
 
 
