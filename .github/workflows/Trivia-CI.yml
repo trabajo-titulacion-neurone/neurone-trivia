@@ -132,11 +132,11 @@ jobs:
     #     pm2 start app.js --name neurone-trivia
     #     # timeout 2s pm2 logs
 
-    # - name: Build Trivia Frontend
-    #   working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
-    #   run: |
-    #     npm install
-    #     ng build --prod --output-path ../Server/public
+    - name: Build Trivia Frontend
+      working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
+      run: |
+        npm install
+        ng build --prod --output-path ../Server/public
 
 
 
