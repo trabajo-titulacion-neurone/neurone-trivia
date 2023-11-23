@@ -96,7 +96,7 @@ jobs:
         path: ${{ env.NEURONE_DEPLOY_REPOSITORY_FOLDER_NAME }}
 
     
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js ${{ env.NODE_VERSION }}
       uses: actions/setup-node@v3
       with:
         # node-version: ${{ matrix.node-version }}
