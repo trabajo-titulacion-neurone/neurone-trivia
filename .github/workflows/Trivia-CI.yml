@@ -137,7 +137,7 @@ jobs:
     - name: Actualizar Playbook
       working-directory: ${{ env.TRIVIA_ANSIBLE_FILES_DIRECTORY }}
       run: |
-        sed -i '/^- {role: node-with-nvm,/s/.*/- {role: node-with-nvm, node_version: "${{ env.NODE_VERSION }}", angular_version: "${{ env.ANGULAR_VERSION }}"} /' ./playbook.yaml
+        sed -i '/^- {role: node-with-nvm,/s/.*/- {role: NODE-with-nvm, node_version: "${{ env.NODE_VERSION }}", angular_version: "${{ env.ANGULAR_VERSION }}"} /' ./playbook.yaml
 
     - name: CAT PLAYBOOK
       working-directory: ${{ env.TRIVIA_ANSIBLE_FILES_DIRECTORY }}
