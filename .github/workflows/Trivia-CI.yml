@@ -16,10 +16,9 @@ env:
   NODE_VERSION: "10.19.0"
   ANGULAR_VERSION: "9.1.13"
 
-  #SSH keys of Autorized Host to connect to pre-production server later
+  #SSH keys of Autorized Host by server to connect later
   SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }} #Clave publica de la maquina para conectarse al servidor
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY}} #Clave privada de la maquina para conectarse al servidor
-  #PASSPHRASE_SSH_PRIVATE_KEY: "frase-random" #DESCARTADO POR EL MOMENTO
 
   #NEURONEGM Database information
   NEURONEGM_DATABASE: "neuronegm"
@@ -27,14 +26,14 @@ env:
   NEURONEGM_DATABASE_PASSWORD: ${{ secrets.NEURONEGM_DATABASE_PASSWORD }}
 
   NEURONEGM_REPOSITORY: "trabajo-titulacion-neurone/modulo-neurone-gm"
-  NEURONEGM_REPOSITORY_FOLDER_NAME: "neurone-gm"
-  NEURONEGM_SERVER_DIRECTORY: "./neurone-gm/Server"
+  NEURONEGM_REPOSITORY_FOLDER_NAME: "NEURONE-GM"
+  NEURONEGM_SERVER_DIRECTORY: "./NEURONE-GM/Server"
 
   #Trivia Data
-  TRIVIA_REPOSITORY_FOLDER_NAME: "trivia"
-  TRIVIA_CLIENT_DIRECTORY: "./trivia/Client"
-  TRIVIA_SERVER_DIRECTORY: "./trivia/Server"
-  BUILD_TRIVIA_LOCAL_PATH_SOURCE: "./trivia/Server/public"
+  TRIVIA_REPOSITORY_FOLDER_NAME: "GAME"
+  TRIVIA_CLIENT_DIRECTORY: "./GAME/Client"
+  TRIVIA_SERVER_DIRECTORY: "./GAME/Server"
+  BUILD_TRIVIA_LOCAL_PATH_SOURCE: "./GAME/Server/public"
 
   #Trivia deploy data
   NEURONE_DEPLOY_REPOSITORY: "trabajo-titulacion-neurone/neurone-deploy"
@@ -72,8 +71,6 @@ jobs:
         echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa  
 
-        
-      #ssh-keygen -p -P "" -N "${{ env.PASSPHRASE_SSH_PRIVATE_KEY }}" -f ~/.ssh/id_rsa
 
         
     - name: Cloning Trivia Repository
@@ -158,15 +155,13 @@ jobs:
       with:
         host: ${{ env.SERVER_IPV4 }}
         username: ${{ env.SERVER_USERNAME }}
-        password: ${{ env.SERVER_PASSWORD }}
-        # key: ${{ env.SSH_PRIVATE_KEY }}
+        # password: ${{ env.SERVER_PASSWORD }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
         port: ${{ env.SSH_PORT }}
         source: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
         target: ${{ env.BUILD_TRIVIA_SERVER_PATH_TARGET }}
         strip_components: 3
 
-        #key_path: /home/runner/.ssh/id_rsa
-        #passphrase: ${{ env.PASSPHRASE_SSH_PRIVATE_KEY }}
 
 
 
