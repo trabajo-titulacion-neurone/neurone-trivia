@@ -156,7 +156,7 @@ jobs:
         options: |
           --extra-vars ansible_become_pass=${{ env.SERVER_PASSWORD }}
 
-    - name: Se envía al servidor el build de trivia por ssh
+    - name: Build of Trivia is sent to the server via ssh
       uses: appleboy/scp-action@v0.1.4
       with:
         host: ${{ env.SERVER_IPV4 }}
