@@ -13,8 +13,8 @@ on:
 
 env:
   #Dependencies Version
-  NODE_VERSION: "16.14.1"
-  ANGULAR_VERSION: "16.2.10"
+  NODE_VERSION: "10.19.0"
+  ANGULAR_VERSION: "9.1.13"
 
   #SSH keys of Autorized Host to connect to pre-production server later
   SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }} #Clave publica de la maquina para conectarse al servidor
@@ -44,9 +44,10 @@ env:
 
   #Server Data
   SERVER_USERNAME: root
+  SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
   SERVER_IPV4: 64.227.17.30
   SSH_PORT: 22
-  BUILD_TRIVIA_SERVER_PATH_TARGET: "./escritorio/neurone-trivia/Server"
+  BUILD_TRIVIA_SERVER_PATH_TARGET: "./apps/GAME/Server"
 
 
 jobs:
@@ -73,18 +74,19 @@ jobs:
 
         
       #ssh-keygen -p -P "" -N "${{ env.PASSPHRASE_SSH_PRIVATE_KEY }}" -f ~/.ssh/id_rsa
+
         
     - name: Cloning Trivia Repository
       uses: actions/checkout@v3
       with:
         path: ${{ env.TRIVIA_REPOSITORY_FOLDER_NAME }} 
         
-    - name: Cloning Neurone-gm repository
-      uses: actions/checkout@v3
-      with:
-        repository: ${{ env.NEURONEGM_REPOSITORY }}
-        # token: 
-        path: ${{ env.NEURONEGM_REPOSITORY_FOLDER_NAME }}
+    # - name: Cloning Neurone-gm repository
+    #   uses: actions/checkout@v3
+    #   with:
+    #     repository: ${{ env.NEURONEGM_REPOSITORY }}
+    #     # token: 
+    #     path: ${{ env.NEURONEGM_REPOSITORY_FOLDER_NAME }}
 
     - name: Cloning neurone-deploy repository
       uses: actions/checkout@v3
@@ -102,56 +104,53 @@ jobs:
         cache: 'npm'
         cache-dependency-path: '${{ env.TRIVIA_CLIENT_DIRECTORY }}/package-lock.json'
       
-    - name: Run MongoDB with Docker
-      run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
+    # - name: Run MongoDB with Docker
+    #   run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
    
-    - name: Install pm2 globally
-      run: npm install -g pm2
+    # - name: Install pm2 globally
+    #   run: npm install -g pm2
       
-    - name: Install http-server globally (OPTIONAL)
-      run: npm install -g http-server
+    # - name: Install http-server globally (OPTIONAL)
+    #   run: npm install -g http-server
 
     - name: Install Angular globally
       run: npm install -g @angular/cli@${{env.ANGULAR_VERSION}}
         
-    - name: Run Neurone-gm Server with pm2
-      working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
-      run: |
-        npm install
-        # npm test
-        pm2 start app.js --name neurone-gm
-        # timeout 2s pm2 logs
+    # - name: Run Neurone-gm Server with pm2
+    #   working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
+    #   run: |
+    #     npm install
+    #     # npm test
+    #     pm2 start app.js --name neurone-gm
+    #     # timeout 2s pm2 logs
 
-    - name: Run Trivia Server with pm2
-      working-directory: ${{ env.TRIVIA_SERVER_DIRECTORY }}
-      run: |
-        npm install
-        # npm test
-        pm2 start app.js --name neurone-trivia
-        # timeout 2s pm2 logs
+    # - name: Run Trivia Server with pm2
+    #   working-directory: ${{ env.TRIVIA_SERVER_DIRECTORY }}
+    #   run: |
+    #     npm install
+    #     # npm test
+    #     pm2 start app.js --name neurone-trivia
+    #     # timeout 2s pm2 logs
 
-    - name: Build Trivia Frontend
-      working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
-      run: |
-        npm install
-        ng build --prod --output-path ../Server/public
-
-    # - name: Run Frontend (OPCIONAL)
-    #   working-directory: ./trivia/Server/public
-    #   run: nohup http-server -p 8080 &
+    # - name: Build Trivia Frontend
+    #   working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
+    #   run: |
+    #     npm install
+    #     ng build --prod --output-path ../Server/public
 
 
 
 
-    - name: Deploy on server using Ansible with neurone-deploy repository
-      uses: dawidd6/action-ansible-playbook@v2
-      with:
-        playbook: playbook.yaml # Required, playbook filepath
-        directory: ${{ env.TRIVIA_ANSIBLE_FILES_DIRECTORY }} # Optional, directory where playbooks live
-        key: ${{secrets.SSH_PRIVATE_KEY}} # Optional, SSH private key
-        # The name of the inventory file is indicated
-        options: |
-          --inventory inventory.yaml
+
+    # - name: Deploy on server using Ansible with neurone-deploy repository
+    #   uses: dawidd6/action-ansible-playbook@v2
+    #   with:
+    #     playbook: playbook.yaml # Required, playbook filepath
+    #     directory: ${{ env.TRIVIA_ANSIBLE_FILES_DIRECTORY }} # Optional, directory where playbooks live
+    #     key: ${{env.SSH_PRIVATE_KEY}} # Optional, SSH private key
+    #     # The name of the inventory file is indicated
+    #     options: |
+    #       --inventory inventory.yaml
 
 
     - name: Se envía al servidor el build de trivia por ssh
@@ -159,7 +158,8 @@ jobs:
       with:
         host: ${{ env.SERVER_IPV4 }}
         username: ${{ env.SERVER_USERNAME }}
-        key: ${{ env.SSH_PRIVATE_KEY }}
+        password: ${{ env.SERVER_PASSWORD }}
+        # key: ${{ env.SSH_PRIVATE_KEY }}
         port: ${{ env.SSH_PORT }}
         source: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
         target: ${{ env.BUILD_TRIVIA_SERVER_PATH_TARGET }}
