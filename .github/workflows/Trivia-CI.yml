@@ -137,8 +137,8 @@ jobs:
     - name: Actualizar Playbook
       working-directory: ${{ env.TRIVIA_ANSIBLE_FILES_DIRECTORY }}
       run: |
-        awk '/- {role: node-with-nvm,/ {print "- {role: node-with-nvm, node_version: \"${{ env.NODE_VERSION }}\", angular_version: \"${{ env.ANGULAR_VERSION }}\"}"; next} 1' ./playbook.yaml > ./playbook.yaml.tmp && mv ./playbook.yaml.tmp ./playbook.yaml
-        
+        awk '/^- {role: node-with-nvm,/ {print gensub(/^- {role: node-with-nvm, .*/, "- {role: node-with-nvm, node_version: \"${{ env.NODE_VERSION }}\", angular_version: \"${{ env.ANGULAR_VERSION }}\"}", 1); next} 1' ./playbook.yaml > ./playbook.yaml.tmp && mv ./playbook.yaml.tmp ./playbook.yaml        
+   
     - name: CAT PLAYBOOK
       working-directory: ${{ env.TRIVIA_ANSIBLE_FILES_DIRECTORY }}
       run: |
