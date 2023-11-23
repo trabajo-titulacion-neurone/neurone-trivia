@@ -16,7 +16,7 @@ env:
   NODE_VERSION: "10.19.0"
   ANGULAR_VERSION: "9.1.13"
 
-  #SSH keys of Autorized Host by server to connect later
+  #SSH keys of Autorized Host/User by the server to connect later
   SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }} #Clave publica de la maquina para conectarse al servidor
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY}} #Clave privada de la maquina para conectarse al servidor
 
@@ -139,15 +139,23 @@ jobs:
 
 
 
-    # - name: Deploy on server using Ansible with neurone-deploy repository
-    #   uses: dawidd6/action-ansible-playbook@v2
-    #   with:
-    #     playbook: playbook.yaml # Required, playbook filepath
-    #     directory: ${{ env.TRIVIA_ANSIBLE_FILES_DIRECTORY }} # Optional, directory where playbooks live
-    #     key: ${{env.SSH_PRIVATE_KEY}} # Optional, SSH private key
-    #     # The name of the inventory file is indicated
-    #     options: |
-    #       --inventory inventory.yaml
+    - name: Deploy on server using Ansible with neurone-deploy repository
+      uses: dawidd6/action-ansible-playbook@v2
+      with:
+        playbook: playbook.yaml # Required, playbook filepath
+        directory: ${{ env.TRIVIA_ANSIBLE_FILES_DIRECTORY }} # Optional, directory where playbooks live
+        key: ${{env.SSH_PRIVATE_KEY}} # Optional, SSH private key
+        inventory: |
+          webservers:
+            hosts:
+              neurone-trivia-dev:
+                ansible_host: ${{ env.SERVER_IPV4 }}
+                ansible_user: ${{ env.SERVER_USERNAME }}
+          
+            vars:
+              ansible_python_interpreter: /usr/bin/python3        
+        options: |
+          --inventory inventory.yaml
 
 
     - name: Se envía al servidor el build de trivia por ssh
