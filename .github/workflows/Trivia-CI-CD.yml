@@ -166,11 +166,13 @@ jobs:
 
 
 
-    - name: Cloning neurone
+    - name: Cloning Neurone
       uses: actions/checkout@v3
       with:
+        repository: NEURONE-IL/neurone.git
+        # token: 
         path: neurone-master
-
+        
     - name: install docker dependencies
       working-directory: ./neurone-master
       run: |
