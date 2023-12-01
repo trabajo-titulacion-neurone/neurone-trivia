@@ -169,7 +169,7 @@ jobs:
     - name: Cloning Neurone
       uses: actions/checkout@v3
       with:
-        repository: NEURONE-IL/neurone.git
+        repository: NEURONE-IL/neurone
         # token: 
         path: neurone-master
         
