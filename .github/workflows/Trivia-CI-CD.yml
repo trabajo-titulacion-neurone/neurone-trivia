@@ -187,12 +187,12 @@ jobs:
 
     - name: ls
       working-directory: ./neurone-master
-      run: ls
+      run: ls -a
 
 
     - name: build neurone
       working-directory: ./neurone-master
-      run: sudo ./neurone-build.sh
+      run: ./neurone-build.sh
 
 
 
