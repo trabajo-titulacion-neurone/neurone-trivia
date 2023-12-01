@@ -197,9 +197,19 @@ jobs:
       run: ./neurone-build.sh
 
 
+    - name: docker images
+      working-directory: ./neurone-master
+      run: docker images
 
+    - name: ls home
+      run: ls -a
 
+    - name: docker ps
+      run: docker ps
 
+    - name: ls neurone
+      working-directory: ./neurone-master
+      run: ls -a
 
 
 
