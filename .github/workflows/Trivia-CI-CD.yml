@@ -44,7 +44,7 @@ env:
   #Server Data
   SERVER_USERNAME: "gerardoluceroc"
   SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-  SERVER_IPV4: 161.35.52.95
+  SERVER_IPV4: 157.230.15.49
   SSH_PORT: 22
   BUILD_TRIVIA_SERVER_PATH_TARGET: "./apps/GAME/Server"
 
@@ -99,14 +99,14 @@ jobs:
         cache: 'npm'
         cache-dependency-path: '${{ env.TRIVIA_CLIENT_DIRECTORY }}/package-lock.json'
       
-    # - name: Run MongoDB with Docker
-    #   run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
+    - name: Run MongoDB with Docker
+      run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
    
-    # - name: Install pm2 globally
-    #   run: npm install -g pm2
+    - name: Install pm2 globally
+      run: npm install -g pm2
 
-    # - name: Install Angular globally
-    #   run: npm install -g @angular/cli@${{env.ANGULAR_VERSION}}
+    - name: Install Angular globally
+      run: npm install -g @angular/cli@${{env.ANGULAR_VERSION}}
         
     # - name: Run Neurone-gm Server with pm2
     #   working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
@@ -122,11 +122,11 @@ jobs:
     #     # npm test
     #     pm2 start app.js --name neurone-trivia
 
-    # - name: Build Trivia Frontend
-    #   working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
-    #   run: |
-    #     npm install
-    #     ng build --prod --output-path ../Server/public
+    - name: Build Trivia Frontend
+      working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
+      run: |
+        npm install
+        ng build --prod --output-path ../Server/public
 
     # - name: Update Playbook with Node and Angular version of environment variables (Optional)
     #   working-directory: ${{ env.TRIVIA_ANSIBLE_FILES_DIRECTORY }}
@@ -151,65 +151,72 @@ jobs:
     #     options: |
     #       --extra-vars ansible_become_pass=${{ env.SERVER_PASSWORD }}
 
-    # - name: Build of Trivia is sent to the server via ssh
-    #   uses: appleboy/scp-action@v0.1.4
-    #   with:
-    #     host: ${{ env.SERVER_IPV4 }}
-    #     username: ${{ env.SERVER_USERNAME }}
-    #     # password: ${{ env.SERVER_PASSWORD }}
-    #     key: ${{ env.SSH_PRIVATE_KEY }}
-    #     port: ${{ env.SSH_PORT }}
-    #     source: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
-    #     target: ${{ env.BUILD_TRIVIA_SERVER_PATH_TARGET }}
-    #     strip_components: 3
-
-
-
-
-    - name: Cloning Neurone
-      uses: actions/checkout@v3
+    - name: Build of Trivia is sent to the server via ssh
+      uses: appleboy/scp-action@v0.1.4
       with:
-        repository: NEURONE-IL/neurone
-        # token: 
-        path: neurone-master
+        host: ${{ env.SERVER_IPV4 }}
+        username: ${{ env.SERVER_USERNAME }}
+        # password: ${{ env.SERVER_PASSWORD }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        port: ${{ env.SSH_PORT }}
+        source: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
+        target: ${{ env.BUILD_TRIVIA_SERVER_PATH_TARGET }}
+        strip_components: 3
+
+
+
+
+
+
+
+
+
+
+
+    # - name: Cloning Neurone
+    #   uses: actions/checkout@v3
+    #   with:
+    #     repository: NEURONE-IL/neurone
+    #     # token: 
+    #     path: neurone-master
         
-    - name: install docker dependencies
-      working-directory: ./neurone-master
-      run: |
-        sudo apt-get update
-        sudo apt-get install ca-certificates curl gnupg lsb-release
+    # - name: install docker dependencies
+    #   working-directory: ./neurone-master
+    #   run: |
+    #     sudo apt-get update
+    #     sudo apt-get install ca-certificates curl gnupg lsb-release
 
 
-    - name: install docker and docker compose
-      working-directory: ./neurone-master
-      run: |
-        sudo apt-get update
-        sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose
+    # - name: install docker and docker compose
+    #   working-directory: ./neurone-master
+    #   run: |
+    #     sudo apt-get update
+    #     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose
 
 
-    - name: ls
-      working-directory: ./neurone-master
-      run: ls -a
+    # - name: ls
+    #   working-directory: ./neurone-master
+    #   run: ls -a
 
 
-    - name: build neurone
-      working-directory: ./neurone-master
-      run: ./neurone-build.sh
+    # - name: build neurone
+    #   working-directory: ./neurone-master
+    #   run: ./neurone-build.sh
 
 
-    - name: docker images
-      working-directory: ./neurone-master
-      run: docker images
+    # - name: docker images
+    #   working-directory: ./neurone-master
+    #   run: docker images
 
-    - name: ls home
-      run: ls -a
+    # - name: ls home
+    #   run: ls -a
 
-    - name: docker ps
-      run: docker ps
+    # - name: docker ps
+    #   run: docker ps
 
-    - name: ls neurone
-      working-directory: ./neurone-master
-      run: ls -a
+    # - name: ls neurone
+    #   working-directory: ./neurone-master
+    #   run: ls -a
 
 
 
