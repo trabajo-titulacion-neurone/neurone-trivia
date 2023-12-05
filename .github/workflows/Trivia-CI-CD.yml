@@ -89,7 +89,7 @@ jobs:
         cache: 'npm'
         cache-dependency-path: '${{ env.TRIVIA_CLIENT_DIRECTORY }}/package-lock.json'
         
-    - name: Install pm2 globally
+    - name: Install PM2 globally
       run: npm install -g pm2
 
     - name: Install Angular globally
@@ -115,13 +115,39 @@ jobs:
         # token: 
         path: ${{ env.NEURONEGM_REPOSITORY_FOLDER_NAME }}      
 
-    - name: Run NEURONE-GM Server with pm2
-      working-directory: "./NEURONE-GM/Server"
+    - name: Run NEURONE-GM Server with PM2
+      working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
       run: |
         npm install
         # npm test
         pm2 start app.js --name neurone-gm
 
+    - name: Run Trivia Server with PM2
+      working-directory: ${{ env.TRIVIA_SERVER_DIRECTORY }}
+      run: |
+        npm install
+        # npm test
+        pm2 start app.js --name neurone-trivia
+
+    # - name: Build Trivia Frontend
+    #   working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
+    #   run: |
+    #     npm install
+    #     ng build --prod --output-path ../Server/public  
+
+    - name: Cloning NEURONE-Core
+      uses: actions/checkout@v3
+      with:
+        repository: ${{ env.NEURONE_CORE_REPOSITORY }}
+        path: ${{ env.NEURONE_CORE_FOLDER_NAME }}
+
+    - name: Build NEURONE-Core
+      working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
+      run: ./${{ env.NEURONE_CORE_BUILD_SCRIPT }}
+
+    - name: Start NEURONE-Core
+      working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
+      run: ./${{ env.NEURONE_CORE_START_SCRIPT }}
 
 
 
@@ -129,16 +155,6 @@ jobs:
 
 
 
-
-        
-
-        
-
-    # - name: Cloning NEURONE-Core
-    #   uses: actions/checkout@v3
-    #   with:
-    #     repository: ${{ env.NEURONE_CORE_REPOSITORY }}
-    #     path: ${{ env.NEURONE_CORE_FOLDER_NAME }}
 
     # - name: Cloning NEURONE-Trivia-Deployment repository
     #   uses: actions/checkout@v3
@@ -147,28 +163,6 @@ jobs:
     #     # token: 
     #     path: ${{ env.NEURONE_DEPLOY_REPOSITORY_FOLDER_NAME }}      
       
-  
-
-    # - name: Run Trivia Server with pm2
-    #   working-directory: ${{ env.TRIVIA_SERVER_DIRECTORY }}
-    #   run: |
-    #     npm install
-    #     # npm test
-    #     pm2 start app.js --name neurone-trivia
-
-    # - name: Build Trivia Frontend
-    #   working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
-    #   run: |
-    #     npm install
-    #     ng build --prod --output-path ../Server/public
-
-    # - name: Build NEURONE-Core
-    #   working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
-    #   run: ./${{ env.NEURONE_CORE_BUILD_SCRIPT }}
-
-    # - name: Start NEURONE-Core
-    #   working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
-    #   run: ./${{ env.NEURONE_CORE_START_SCRIPT }}
 
     # - name: Update Playbook with Node and Angular version of environment variables (Optional)
     #   working-directory: ${{ env.TRIVIA_ANSIBLE_FILES_DIRECTORY }}
