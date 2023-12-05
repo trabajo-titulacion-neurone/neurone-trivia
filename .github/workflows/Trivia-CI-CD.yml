@@ -50,7 +50,7 @@ env:
   #Server Data
   SERVER_USERNAME: "gerardoluceroc"
   SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-  SERVER_IPV4: 137.184.220.25
+  SERVER_IPV4: 64.227.25.147
   SSH_PORT: 22
   BUILD_TRIVIA_SERVER_PATH_TARGET: "./apps/GAME/Server"
   NEURONE_CORE_IMAGES_SERVER_PATH_TARGET: "./neurone-images"
@@ -104,19 +104,19 @@ jobs:
     - name: Run MongoDB with Docker
       run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
   
-    # - name: Cloning NEURONE-GM repository
-    #   uses: actions/checkout@v3
-    #   with:
-    #     repository: ${{ env.NEURONEGM_REPOSITORY }}
-    #     # token: 
-    #     path: ${{ env.NEURONEGM_REPOSITORY_FOLDER_NAME }}      
+    - name: Cloning NEURONE-GM repository
+      uses: actions/checkout@v3
+      with:
+        repository: ${{ env.NEURONEGM_REPOSITORY }}
+        # token: 
+        path: ${{ env.NEURONEGM_REPOSITORY_FOLDER_NAME }}      
 
-    # - name: Run NEURONE-GM Server with PM2
-    #   working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
-    #   run: |
-    #     npm install
-    #     # npm test
-    #     pm2 start app.js --name neurone-gm
+    - name: Run NEURONE-GM Server with PM2
+      working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
+      run: |
+        npm install
+        # npm test
+        pm2 start app.js --name neurone-gm
 
     - name: Cloning NEURONE-Core
       uses: actions/checkout@v3
@@ -142,67 +142,6 @@ jobs:
       with:
         name: neurone-images
         path: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
-        
-    - name: ls dentro de neurone-images(BORRAR)
-      working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
-      run: ls
-      
-    # - name: Transfer NEURONE-Core images files to server
-    #   uses: appleboy/scp-action@v0.1.4
-    #   with:
-    #     host: ${{ env.SERVER_IPV4 }}
-    #     username: ${{ env.SERVER_USERNAME }}
-    #     key: ${{ env.SSH_PRIVATE_KEY }}
-    #     port: ${{ env.SSH_PORT }}
-    #     source: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
-    #     target: ${{ env.NEURONE_CORE_IMAGES_SERVER_PATH_TARGET }}
-    #     strip_components: 1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
 
     - name: Start NEURONE-Core
       working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
@@ -226,6 +165,10 @@ jobs:
       with:
         name: build-trivia-frontend
         path: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
+
+
+
+
 
 
 
