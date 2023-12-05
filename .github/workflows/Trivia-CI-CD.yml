@@ -226,10 +226,10 @@ jobs:
         echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa  
         
-    - name: Cloning Trivia Repository
-      uses: actions/checkout@v3
-      with:
-        path: ${{ env.TRIVIA_REPOSITORY_FOLDER_NAME }} 
+    # - name: Cloning Trivia Repository
+    #   uses: actions/checkout@v3
+    #   with:
+    #     path: ${{ env.TRIVIA_REPOSITORY_FOLDER_NAME }} 
 
     # - name: Download trivia build artifact from build job
     #   uses: actions/download-artifact@v3
