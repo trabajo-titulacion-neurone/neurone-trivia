@@ -128,14 +128,14 @@ jobs:
       working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
       run: ./${{ env.NEURONE_CORE_BUILD_SCRIPT }}
       
+    - name: Create neurone-images folder
+      run: mkdir neurone-images
+      
     - name: Upload NEURONE-Core build artifact for deployment job
       uses: actions/upload-artifact@v3
       with:
         name: neurone-images
         path: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
-  
-    - name: Create neurone-images folder
-      run: mkdir neurone-images
       
     - name: Save NEURONE-Core Images to Tar Files
       working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
