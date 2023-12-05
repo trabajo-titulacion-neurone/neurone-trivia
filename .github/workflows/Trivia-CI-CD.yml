@@ -141,7 +141,8 @@ jobs:
         docker save -o mongo.tar dgacitua/mongo
         docker save -o neurone.tar dgacitua/neurone
         
-    - name: ls
+    - name: ls dentro de neurone-images
+      working-directory: "./neurone-images"
       run: ls
       
     - name: Transfer Files to Server
