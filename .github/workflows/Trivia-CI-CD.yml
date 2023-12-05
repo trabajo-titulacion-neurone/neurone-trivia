@@ -152,7 +152,7 @@ jobs:
         username: ${{ env.SERVER_USERNAME }}
         key: ${{ env.SSH_PRIVATE_KEY }}
         port: ${{ env.SSH_PORT }}
-        source: "/neurone-images/*.tar"
+        source: "./neurone-images"
         target: "./neurone-images-server"  
 
 
