@@ -210,7 +210,8 @@ jobs:
     #     strip_components: 3
 
   deploy:
-
+  
+    needs: build
     runs-on: ubuntu-22.04
     
     steps:
