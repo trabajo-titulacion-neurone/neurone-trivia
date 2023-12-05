@@ -184,7 +184,6 @@ jobs:
       with:
         host: ${{ env.SERVER_IPV4 }}
         username: ${{ env.SERVER_USERNAME }}
-        # password: ${{ env.SERVER_PASSWORD }}
         key: ${{ env.SSH_PRIVATE_KEY }}
         port: ${{ env.SSH_PORT }}
         source: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
