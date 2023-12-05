@@ -44,7 +44,7 @@ env:
   NEURONE_CORE_FOLDER_NAME: "neurone-master"
   NEURONE_CORE_DIRECTORY: "./neurone-master"
   NEURONE_CORE_BUILD_SCRIPT: "neurone-build.sh"
-  NEUONRE_CORE_START_SCRIPT: "neurone-start.sh"
+  NEURONE_CORE_START_SCRIPT: "neurone-start.sh"
 
   #Server Data
   SERVER_USERNAME: "gerardoluceroc"
