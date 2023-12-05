@@ -49,7 +49,7 @@ env:
   #Server Data
   SERVER_USERNAME: "gerardoluceroc"
   SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-  SERVER_IPV4: 157.230.15.49
+  SERVER_IPV4: 67.205.148.48
   SSH_PORT: 22
   BUILD_TRIVIA_SERVER_PATH_TARGET: "./apps/GAME/Server"
 
