@@ -128,17 +128,17 @@ jobs:
     - name: Run MongoDB with Docker
       run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
    
-    - name: Run NEURONE-GM Server with pm2
-      working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
-      run: |
-        ls
-        
     # - name: Run NEURONE-GM Server with pm2
     #   working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
     #   run: |
-    #     npm install
-    #     # npm test
-    #     pm2 start app.js --name neurone-gm
+    #     ls
+        
+    - name: Run NEURONE-GM Server with pm2
+      working-directory: "./NEURONE-GM/Server"
+      run: |
+        npm install
+        # npm test
+        pm2 start app.js --name neurone-gm
 
     - name: Run Trivia Server with pm2
       working-directory: ${{ env.TRIVIA_SERVER_DIRECTORY }}
