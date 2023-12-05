@@ -138,7 +138,7 @@ jobs:
       run: ls
 
     - name: Save NEURONE-Core Images to Tar Files
-      working-directory: ${{ env.}}
+      working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
       run: |
         docker save -o mongo.tar dgacitua/mongo
         docker save -o neurone.tar dgacitua/neurone
@@ -147,7 +147,7 @@ jobs:
       working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
       run: ls
       
-    - name: Transfer Files to Server
+    - name: Transfer NEURONE-Core images files to server
       uses: appleboy/scp-action@v0.1.4
       with:
         host: ${{ env.SERVER_IPV4 }}
