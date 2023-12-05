@@ -36,7 +36,7 @@ env:
   #Trivia deployment data
   NEURONE_TRIVIA_DEPLOY_REPOSITORY: "trabajo-titulacion-neurone/NEURONE-Trivia-Deployment"
   NEURONE_TRIVIA_DEPLOY_REPOSITORY_FOLDER_NAME: "NEURONE-Trivia-Deployment"
-  #TRIVIA_DEPLOY_DIRECTORY: "./NEURONE-Trivia-Deployment/ansible-files"
+  TRIVIA_DEPLOY_DIRECTORY: "./NEURONE-Trivia-Deployment/ansible-files"
   TRIVIA_ANSIBLE_FILES_DIRECTORY: "./NEURONE-Trivia-Deployment/ansible-files"
 
   #Neurone-Core data
@@ -127,6 +127,11 @@ jobs:
       
     - name: Run MongoDB with Docker
       run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
+   
+    - name: Run NEURONE-GM Server with pm2
+      working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
+      run: |
+        ls
         
     # - name: Run NEURONE-GM Server with pm2
     #   working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
