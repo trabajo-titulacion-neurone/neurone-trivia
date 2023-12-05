@@ -1,5 +1,3 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
 name: create-droplet-digitalocean
 
@@ -15,17 +13,8 @@ env:
 #DigitalOcean Data
   DROPLET_NAME: droplet-neurone-trivia-v1 #Nombre que llevará el droplet a crear
   DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-  #SSH_KEY_NAME: local_public_key #Nombre que llevará la clave publica asociada a la cuenta de digitalocean, se buscará si la clave existe de acuerdo con este nombre
   FINGERPRINT_SSH_KEY_DIGITALOCEAN: "dd:ca:b2:21:ed:6e:47:dd:12:22:58:c2:58:5d:77:e6"
-  
-  #SSH Keys
-  #SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }} #Clave publica de la maquina para conectarse al servidor
-  #SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} #Clave privada de la maquina para conectarse al servidor
-
-  #Vars
-  #SSH_KEY_ID: "" #ID que tendrá la clave publica agregada en el listado de claves de doctl
-  #DROPLET_IPV4: "" #IPv4 que tendrá el droplet una vez creado
-  WORKING_DIRECTORY: ./neurone-deploy/trivia-deploy/terraform-files/digitalocean
+  WORKING_DIRECTORY: ./NEURONE-Trivia-Deployment/terraform-files/digitalocean
   
 
 jobs:
@@ -39,23 +28,13 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    
-    # Generate a pair of SSH keys that will be replaced later by the environment variable keys
-    # - name: ssh-keygen
-    #   run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
-
-    # - name: Copy ssh key of environment variables in local machine
-    #   run: |
-    #     echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
-    #     echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-    #     chmod 600 ~/.ssh/id_rsa     
-
-    - name: Cloning neurone-deploy repository.
+     
+    - name: Cloning NEURONE-Trivia-Deployment repository.
       uses: actions/checkout@v3
       with:
-        repository: trabajo-titulacion-neurone/neurone-deploy
+        repository: trabajo-titulacion-neurone/NEURONE-Trivia-Deployment
         # token: 
-        path: neurone-deploy
+        path: NEURONE-Trivia-Deployment
 
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v2
@@ -67,7 +46,6 @@ jobs:
 
     - name: Terraform Init
       working-directory: ${{ env.WORKING_DIRECTORY }}
-      #id: init
       run: terraform init
 
     - name: Edit the variables.tf file to add the DigitalOcean token and droplet name
@@ -94,89 +72,3 @@ jobs:
       working-directory: ${{ env.WORKING_DIRECTORY }}
       run: terraform apply -auto-approve
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
-  # deploy-with-ansible:
-  
-  #   runs-on: ubuntu-22.04
-    
-  #   steps:
-
-  #   - name: ssh-keygen
-  #     run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
-
-  #   - name: Copy ssh key of environment variables in local machine
-  #     run: |
-  #       echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
-  #       echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-  #       chmod 600 ~/.ssh/id_rsa     
-
-  #   - name: Clonación de neurone-deploy
-  #     uses: actions/checkout@v3
-  #     with:
-  #       repository: trabajo-titulacion-neurone/neurone-deploy
-  #       # token: 
-  #       path: neurone-deploy
-    
-  #   - name: Run playbook
-  #     uses: dawidd6/action-ansible-playbook@v2
-  #     with:
-  #       # Required, playbook filepath
-  #       playbook: playbook.yaml
-  #       # Optional, directory where playbooks live
-  #       directory: ./neurone-deploy/trivia-deploy/ansible-deploy
-  #       # Optional, SSH private key
-  #       key: ${{secrets.SSH_PRIVATE_KEY}}
-  #       # Optional, literal inventory file contents
-  #       inventory: |
-  #         webservers:
-  #           hosts:
-  #             mi_droplet_digitalocean:
-  #               ansible_host: 157.230.230.83
-  #               ansible_user: root
-  #           vars:
-  #             ansible_python_interpreter: /usr/bin/python3
-  #             ansible_user: root
-          
-  #       # Optional, SSH known hosts file content
-  #       # known_hosts: |
-  #       #   example.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
-  #       # # Optional, encrypted vault password
-  #       # vault_password: ${{secrets.VAULT_PASSWORD}}
-  #       # # Optional, galaxy requirements filepath
-  #       # requirements: galaxy-requirements.yml
-  #       # # Optional, additional flags to pass to ansible-playbook
-  #       # options: |
-  #       #   --inventory .hosts
-  #       #   --limit group1
-  #       #   --extra-vars hello=there
-  #       #   --verbose
-          
-  #       # working-directory: ./neurone-deploy/trivia-deploy/ansible-deploy
