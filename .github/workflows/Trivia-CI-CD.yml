@@ -122,6 +122,9 @@ jobs:
         repository: ${{ env.NEURONE_CORE_REPOSITORY }}
         path: ${{ env.NEURONE_CORE_FOLDER_NAME }}
 
+    - name: mkdir neurone-images
+      run: mkdir neurone-images
+
     - name: Build NEURONE-Core
       working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
       run: ./${{ env.NEURONE_CORE_BUILD_SCRIPT }}
