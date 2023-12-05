@@ -50,7 +50,7 @@ env:
   #Server Data
   SERVER_USERNAME: "gerardoluceroc"
   SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-  SERVER_IPV4: 67.205.148.48
+  SERVER_IPV4: 137.184.220.25
   SSH_PORT: 22
   BUILD_TRIVIA_SERVER_PATH_TARGET: "./apps/GAME/Server"
   NEURONE_CORE_IMAGES_SERVER_PATH_TARGET: "./neurone-images"
@@ -272,7 +272,7 @@ jobs:
         port: ${{ env.SSH_PORT }}
         source: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
         target: ${{ env.NEURONE_CORE_IMAGES_SERVER_PATH_TARGET }}
-        strip_components: 1
+        strip_components: 2
         
     - name: Cloning NEURONE-Trivia-Deployment repository
       uses: actions/checkout@v3
