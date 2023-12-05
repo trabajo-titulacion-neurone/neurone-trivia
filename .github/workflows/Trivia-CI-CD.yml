@@ -64,9 +64,9 @@ jobs:
     #     node-version: [16.14.1]
     #     # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
   
-    # steps:
-    # - name: free -h
-    #   run: free -h
+    steps:
+    - name: free -h
+      run: free -h
     
     # #Generate a pair of SSH keys that will be replaced later by the environment variable keys
     # - name: Create ssh-keygen pair
