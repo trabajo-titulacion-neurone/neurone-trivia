@@ -65,6 +65,10 @@ jobs:
     #     # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
   
     steps:
+
+    
+    - name: docker images
+      run: docker images
     
     - name: Cloning Trivia Repository
       uses: actions/checkout@v3
@@ -125,10 +129,99 @@ jobs:
     - name: docker images
       run: docker images
 
+    - name: ls
+      run: ls
 
     - name: Save NEURONE-Core Images to Tar Files
+      working-directory: ./neurone-images
       run: |
-        docker save -o mongo.tar mongo
+        docker save -o mongo.tar dgacitua/mongo
+        docker save -o neurone.tar dgacitua/neurone
+        
+    - name: ls
+      run: ls
+      
+    - name: Transfer Files to Server
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ env.SERVER_IPV4 }}
+        username: ${{ env.SERVER_USERNAME }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        port: ${{ env.SSH_PORT }}
+        source: "/neurone-images/*.tar"
+        target: "./neurone-images-server"  
+
+
+  #   - name: Build of Trivia is sent to the server via ssh
+  #     uses: appleboy/scp-action@v0.1.4
+  #     with:
+  #       host: ${{ env.SERVER_IPV4 }}
+  #       username: ${{ env.SERVER_USERNAME }}
+  #       key: ${{ env.SSH_PRIVATE_KEY }}
+  #       port: ${{ env.SSH_PORT }}
+  #       source: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
+  #       target: ${{ env.BUILD_TRIVIA_SERVER_PATH_TARGET }}
+  #       strip_components: 3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
 
     # - name: Start NEURONE-Core
     #   working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
