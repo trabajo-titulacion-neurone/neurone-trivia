@@ -95,6 +95,16 @@ jobs:
     - name: Install Angular globally
       run: npm install -g @angular/cli@${{env.ANGULAR_VERSION}}
 
+    - name: Install docker dependencies for NEURONE-Core
+      run: |
+        sudo apt-get update
+        sudo apt-get install ca-certificates curl gnupg lsb-release
+
+    - name: Install docker and docker compose for NEURONE-Core
+      run: |
+        sudo apt-get update
+        sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose      
+
     - name: Run MongoDB with Docker
       run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
   
@@ -122,15 +132,6 @@ jobs:
 
         
 
-    # - name: Install docker dependencies for NEURONE-Core
-    #   run: |
-    #     sudo apt-get update
-    #     sudo apt-get install ca-certificates curl gnupg lsb-release
-
-    # - name: Install docker and docker compose for NEURONE-Core
-    #   run: |
-    #     sudo apt-get update
-    #     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose
         
 
     # - name: Cloning NEURONE-Core
