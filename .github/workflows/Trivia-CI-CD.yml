@@ -75,6 +75,11 @@ jobs:
         echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
         echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa  
+        
+    - name: Cloning Trivia Repository
+      uses: actions/checkout@v3
+      with:
+        path: ${{ env.TRIVIA_REPOSITORY_FOLDER_NAME }} 
 
     - name: Use Node.js ${{ env.NODE_VERSION }}
       uses: actions/setup-node@v3
@@ -99,11 +104,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose
-        
-    - name: Cloning Trivia Repository
-      uses: actions/checkout@v3
-      with:
-        path: ${{ env.TRIVIA_REPOSITORY_FOLDER_NAME }} 
         
     - name: Cloning NEURONE-GM repository
       uses: actions/checkout@v3
