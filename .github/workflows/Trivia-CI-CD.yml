@@ -45,6 +45,7 @@ env:
   NEURONE_CORE_DIRECTORY: "./neurone-master"
   NEURONE_CORE_BUILD_SCRIPT: "neurone-build.sh"
   NEURONE_CORE_START_SCRIPT: "neurone-start.sh"
+  NEURONE_CORE_IMAGES_PATH_SOURCE: "./neurone-images"
 
   #Server Data
   SERVER_USERNAME: "gerardoluceroc"
@@ -52,6 +53,7 @@ env:
   SERVER_IPV4: 67.205.148.48
   SSH_PORT: 22
   BUILD_TRIVIA_SERVER_PATH_TARGET: "./apps/GAME/Server"
+  NEURONE_CORE_IMAGES_SERVER_PATH_TARGET: "./neurone-images"
 
 
 jobs:
@@ -136,13 +138,13 @@ jobs:
       run: ls
 
     - name: Save NEURONE-Core Images to Tar Files
-      working-directory: ./neurone-images
+      working-directory: ${{ env.}}
       run: |
         docker save -o mongo.tar dgacitua/mongo
         docker save -o neurone.tar dgacitua/neurone
         
     - name: ls dentro de neurone-images
-      working-directory: "./neurone-images"
+      working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
       run: ls
       
     - name: Transfer Files to Server
@@ -152,8 +154,9 @@ jobs:
         username: ${{ env.SERVER_USERNAME }}
         key: ${{ env.SSH_PRIVATE_KEY }}
         port: ${{ env.SSH_PORT }}
-        source: "./neurone-images"
-        target: "./neurone-images-server"  
+        source: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
+        target: ${{ env.NEURONE_CORE_IMAGES_SERVER_PATH_TARGET }}
+        strip_components: 1
 
 
   #   - name: Build of Trivia is sent to the server via ssh
