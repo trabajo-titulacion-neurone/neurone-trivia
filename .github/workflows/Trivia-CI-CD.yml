@@ -2,11 +2,11 @@
 name: NEURONE-Trivia CI-CD
 
 on:
-  workflow_dispatch:
-  # push:
-  #   branches: [ "main" ]
-  # pull_request:
-  #   branches: [ "main" ]
+  # workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 
 env:
@@ -97,11 +97,6 @@ jobs:
 
     - name: Run MongoDB with Docker
       run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
-
-    - name: Save NEURONE-Core Images to Tar Files
-      run: |
-        docker save -o imagen1.tar nombre_de_tu_imagen1
-        docker save -o imagen2.tar nombre_de_tu_imagen2
   
     # - name: Cloning NEURONE-GM repository
     #   uses: actions/checkout@v3
@@ -126,6 +121,14 @@ jobs:
     - name: Build NEURONE-Core
       working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
       run: ./${{ env.NEURONE_CORE_BUILD_SCRIPT }}
+
+    - name: docker images
+      run: docker images
+
+
+    - name: Save NEURONE-Core Images to Tar Files
+      run: |
+        docker save -o mongo.tar mongo
 
     # - name: Start NEURONE-Core
     #   working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
