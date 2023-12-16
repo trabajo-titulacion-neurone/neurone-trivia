@@ -166,6 +166,8 @@ jobs:
         name: build-trivia-frontend
         path: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
 
+    - name: docker images 2
+      run: docker images
 
 
 
