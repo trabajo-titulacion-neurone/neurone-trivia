@@ -190,6 +190,9 @@ jobs:
         echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
         echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa  
+        
+    - name: ssh key from localhost is copied to the list of authorized keys by the server
+      run: sshpass -p ${{ env.SERVER_PASSWORD}} ~/.ssh/id_rsa.pub ${{ env.SERVER_USERNAME }}@${{ env.SERVER_IPV4 }}
       
     - name: Cloning Trivia Repository
       uses: actions/checkout@v3
@@ -208,16 +211,16 @@ jobs:
         name: neurone-images
         path: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
 
-    # - name: Transfer NEURONE-Core images files to server
-    #   uses: appleboy/scp-action@v0.1.4
-    #   with:
-    #     host: ${{ env.SERVER_IPV4 }}
-    #     username: ${{ env.SERVER_USERNAME }}
-    #     key: ${{ env.SSH_PRIVATE_KEY }}
-    #     port: ${{ env.SSH_PORT }}
-    #     source: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
-    #     target: ${{ env.NEURONE_CORE_IMAGES_SERVER_PATH_TARGET }}
-    #     strip_components: 2
+    - name: Transfer NEURONE-Core images files to server
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ env.SERVER_IPV4 }}
+        username: ${{ env.SERVER_USERNAME }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        port: ${{ env.SSH_PORT }}
+        source: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
+        target: ${{ env.NEURONE_CORE_IMAGES_SERVER_PATH_TARGET }}
+        strip_components: 2
         
     - name: Cloning NEURONE-Trivia-Deployment repository
       uses: actions/checkout@v3
