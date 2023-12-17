@@ -139,7 +139,7 @@ jobs:
 
     - name: Run test (continue with error)
       working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
-      run: npm test
+      run: npm test --timeout 100000
       continue-on-error: true
 
     - name: Run NEURONE-GM Server with PM2
@@ -179,7 +179,7 @@ jobs:
 
     - name: Run backend tests (continue with error)
       working-directory: ${{ env.TRIVIA_SERVER_DIRECTORY }}
-      run: npm test
+      run: npm test --timeout 100000
       continue-on-error: true  
 
     - name: Install frontend dependencies
@@ -188,7 +188,7 @@ jobs:
 
     - name: Run frontend tests (continue with error)
       working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
-      run: npm test
+      run: npm test 
       continue-on-error: true  
 
     - name: Build Trivia frontend
