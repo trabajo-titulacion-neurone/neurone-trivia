@@ -349,92 +349,92 @@ jobs:
 
 
 
-  # deploy:
+  deploy:
   
-  #   needs: [neurone-core-CI, neurone-gm-CI, trivia-CI]
-  #   runs-on: ubuntu-22.04
+    needs: [neurone-core-CI, neurone-gm-CI, trivia-CI]
+    runs-on: ubuntu-22.04
     
-  #   steps:
+    steps:
     
-  #   #Generate a pair of SSH keys that will be replaced later by the environment variable keys
-  #   - name: Create ssh-keygen pair
-  #     run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
+    #Generate a pair of SSH keys that will be replaced later by the environment variable keys
+    - name: Create ssh-keygen pair
+      run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
 
-  #   - name: Copy ssh key of environment variables in local machine
-  #     run: |
-  #       echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
-  #       echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-  #       chmod 600 ~/.ssh/id_rsa  
+    - name: Copy ssh key of environment variables in local machine
+      run: |
+        echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+        echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa  
         
-  #   - name: ssh key from localhost is copied to the list of authorized keys by the server
-  #     run: sshpass -p ${{ env.SERVER_PASSWORD}} ~/.ssh/id_rsa.pub ${{ env.SERVER_USERNAME }}@${{ env.SERVER_IPV4 }}
+    - name: ssh key from localhost is copied to the list of authorized keys by the server
+      run: sshpass -p ${{ env.SERVER_PASSWORD}} ~/.ssh/id_rsa.pub ${{ env.SERVER_USERNAME }}@${{ env.SERVER_IPV4 }}
       
-  #   # - name: Cloning Trivia Repository
-  #   #   uses: actions/checkout@v3
-  #   #   with:
-  #   #     path: ${{ env.NEURONE_TRIVIA_REPOSITORY_FOLDER_NAME }} 
+    # - name: Cloning Trivia Repository
+    #   uses: actions/checkout@v3
+    #   with:
+    #     path: ${{ env.NEURONE_TRIVIA_REPOSITORY_FOLDER_NAME }} 
 
-  #   - name: Download Trivia build artifact from build job
-  #     uses: actions/download-artifact@v3
-  #     with:
-  #       name: build-trivia-frontend
-  #       path: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
+    - name: Download Trivia build artifact from build job
+      uses: actions/download-artifact@v3
+      with:
+        name: build-trivia-frontend
+        path: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
 
-  #   - name: Download NEURONE images artifact from build job
-  #     uses: actions/download-artifact@v3
-  #     with:
-  #       name: neurone-images
-  #       path: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
+    - name: Download NEURONE images artifact from build job
+      uses: actions/download-artifact@v3
+      with:
+        name: neurone-images
+        path: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
 
-  #   - name: Transfer NEURONE-Core images files to server
-  #     uses: appleboy/scp-action@v0.1.4
-  #     with:
-  #       host: ${{ env.SERVER_IPV4 }}
-  #       username: ${{ env.SERVER_USERNAME }}
-  #       key: ${{ env.SSH_PRIVATE_KEY }}
-  #       port: ${{ env.SSH_PORT }}
-  #       source: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
-  #       target: ${{ env.NEURONE_CORE_IMAGES_SERVER_PATH_TARGET }}
-  #       strip_components: 2
+    - name: Transfer NEURONE-Core images files to server
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ env.SERVER_IPV4 }}
+        username: ${{ env.SERVER_USERNAME }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        port: ${{ env.SSH_PORT }}
+        source: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
+        target: ${{ env.NEURONE_CORE_IMAGES_SERVER_PATH_TARGET }}
+        strip_components: 2
         
-  #   - name: Cloning NEURONE-Trivia-Deployment repository
-  #     uses: actions/checkout@v3
-  #     with:
-  #       repository: ${{ env.NEURONE_TRIVIA_DEPLOY_REPOSITORY }}
-  #       # token: 
-  #       path: ${{ env.NEURONE_TRIVIA_DEPLOY_REPOSITORY_FOLDER_NAME }}      
+    - name: Cloning NEURONE-Trivia-Deployment repository
+      uses: actions/checkout@v3
+      with:
+        repository: ${{ env.NEURONE_TRIVIA_DEPLOY_REPOSITORY }}
+        # token: 
+        path: ${{ env.NEURONE_TRIVIA_DEPLOY_REPOSITORY_FOLDER_NAME }}      
       
-  #   - name: Update Playbook with Node and Angular version of environment variables (Optional)
-  #     working-directory: ${{ env.NEURONE_TRIVIA_ANSIBLE_FILES_DIRECTORY }}
-  #     run: |
-  #       awk '/- {role: node-with-nvm,/ {print "    - {role: node-with-nvm, node_version: \"${{ env.NODE_VERSION }}\", angular_version: \"${{ env.ANGULAR_VERSION }}\"}"; next} 1' ./playbook.yaml > ./playbook.yaml.tmp && mv ./playbook.yaml.tmp ./playbook.yaml    
+    - name: Update Playbook with Node and Angular version of environment variables (Optional)
+      working-directory: ${{ env.NEURONE_TRIVIA_ANSIBLE_FILES_DIRECTORY }}
+      run: |
+        awk '/- {role: node-with-nvm,/ {print "    - {role: node-with-nvm, node_version: \"${{ env.NODE_VERSION }}\", angular_version: \"${{ env.ANGULAR_VERSION }}\"}"; next} 1' ./playbook.yaml > ./playbook.yaml.tmp && mv ./playbook.yaml.tmp ./playbook.yaml    
       
-  #   - name: Deploy on server using Ansible with NEURONE-Trivia-Deployment repository
-  #     uses: dawidd6/action-ansible-playbook@v2
-  #     with:
-  #       playbook: playbook.yaml # Required, playbook filepath
-  #       directory: ${{ env.NEURONE_TRIVIA_ANSIBLE_FILES_DIRECTORY }} # Optional, directory where playbooks live
-  #       key: ${{ env.SSH_PRIVATE_KEY }} #SSH private key
-  #       inventory: |
-  #         webservers:
-  #           hosts:
-  #             neurone-trivia-dev:
-  #               ansible_host: ${{ env.SERVER_IPV4 }}
-  #               ansible_user: ${{ env.SERVER_USERNAME }}
+    - name: Deploy on server using Ansible with NEURONE-Trivia-Deployment repository
+      uses: dawidd6/action-ansible-playbook@v2
+      with:
+        playbook: playbook.yaml # Required, playbook filepath
+        directory: ${{ env.NEURONE_TRIVIA_ANSIBLE_FILES_DIRECTORY }} # Optional, directory where playbooks live
+        key: ${{ env.SSH_PRIVATE_KEY }} #SSH private key
+        inventory: |
+          webservers:
+            hosts:
+              neurone-trivia-dev:
+                ansible_host: ${{ env.SERVER_IPV4 }}
+                ansible_user: ${{ env.SERVER_USERNAME }}
           
-  #           vars:
-  #             ansible_python_interpreter: /usr/bin/python3        
-  #       options: |
-  #         --extra-vars ansible_become_pass=${{ env.SERVER_PASSWORD }}
+            vars:
+              ansible_python_interpreter: /usr/bin/python3        
+        options: |
+          --extra-vars ansible_become_pass=${{ env.SERVER_PASSWORD }}
 
-  #   - name: Build of Trivia is sent to the server via ssh
-  #     uses: appleboy/scp-action@v0.1.4
-  #     with:
-  #       host: ${{ env.SERVER_IPV4 }}
-  #       username: ${{ env.SERVER_USERNAME }}
-  #       key: ${{ env.SSH_PRIVATE_KEY }}
-  #       port: ${{ env.SSH_PORT }}
-  #       source: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
-  #       target: ${{ env.BUILD_TRIVIA_SERVER_PATH_TARGET }}
-  #       strip_components: 3
+    - name: Build of Trivia is sent to the server via ssh
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ env.SERVER_IPV4 }}
+        username: ${{ env.SERVER_USERNAME }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        port: ${{ env.SSH_PORT }}
+        source: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
+        target: ${{ env.BUILD_TRIVIA_SERVER_PATH_TARGET }}
+        strip_components: 3
 
