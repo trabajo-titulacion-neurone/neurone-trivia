@@ -62,7 +62,7 @@ env:
 jobs:
   neurone-core-CI:
   
-    runs-on: ${{ env.RUNS_ON }}
+    runs-on: ubuntu-22.04
 
     steps:
 
@@ -109,7 +109,7 @@ jobs:
 
   neurone-gm-CI:
   
-    runs-on: ${{ env.RUNS_ON }}
+    runs-on: ubuntu-22.04
 
     steps:
        
@@ -150,7 +150,7 @@ jobs:
 
   trivia-CI:
   
-    runs-on: ${{ env.RUNS_ON }}
+    runs-on: ubuntu-22.04
 
     steps:
     
@@ -352,7 +352,7 @@ jobs:
   # deploy:
   
   #   needs: [neurone-core-CI, neurone-gm-CI, trivia-CI]
-  #   runs-on: ${{ env.RUNS_ON }}
+  #   runs-on: ubuntu-22.04
     
   #   steps:
     
