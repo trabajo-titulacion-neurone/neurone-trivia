@@ -367,8 +367,8 @@ jobs:
         echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa  
         
-    - name: ssh key from localhost is copied to the list of authorized keys by the server
-      run: sshpass -p ${{ env.SERVER_PASSWORD}} ~/.ssh/id_rsa.pub ${{ env.SERVER_USERNAME }}@${{ env.SERVER_IPV4 }}
+    # - name: ssh key from localhost is copied to the list of authorized keys by the server
+    #   run: sshpass -p ${{ env.SERVER_PASSWORD}} ~/.ssh/id_rsa.pub ${{ env.SERVER_USERNAME }}@${{ env.SERVER_IPV4 }}
       
     # - name: Cloning Trivia Repository
     #   uses: actions/checkout@v3
