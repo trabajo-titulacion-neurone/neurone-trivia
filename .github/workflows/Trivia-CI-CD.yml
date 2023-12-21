@@ -406,7 +406,8 @@ jobs:
 
   deploy:
   
-    needs: [neurone-core-CI, neurone-gm-CI, trivia-CI]
+    # needs: [neurone-core-CI, neurone-gm-CI, trivia-CI]
+    needs: [send-build-trivia, send-build-neurone-core]
     runs-on: ubuntu-22.04
     
     steps:
