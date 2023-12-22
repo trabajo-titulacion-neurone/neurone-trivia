@@ -54,7 +54,7 @@ env:
   SERVER_USERNAME: "neurone"
   # SERVER_PASSWORD: "claveneurone321."
   SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-  SERVER_IPV4: 67.205.160.114
+  SERVER_IPV4: 67.205.166.101
   SSH_PORT: 22
   BUILD_TRIVIA_SERVER_PATH_TARGET: "./apps/GAME/Server"
   NEURONE_CORE_IMAGES_SERVER_PATH_TARGET: "./neurone-images"
@@ -203,191 +203,75 @@ jobs:
         path: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
 
 
-  # build:
-
+  # send-build-trivia:
+  
+  #   needs: [trivia-CI]
   #   runs-on: ubuntu-22.04
-
-  #   # strategy:
-  #   #   matrix:
-  #   #     node-version: [16.14.1]
-  #   #     # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-  
+    
   #   steps:
-
     
-  #   - name: docker images
-  #     run: docker images
-    
-  #   - name: Cloning Trivia Repository
-  #     uses: actions/checkout@v3
-  #     with:
-  #       path: ${{ env.TRIVIA_REPOSITORY_FOLDER_NAME }} 
+  #   #Generate a pair of SSH keys that will be replaced later by the environment variable keys
+  #   - name: Create ssh-keygen pair
+  #     run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
 
-  #   - name: Use Node.js ${{ env.NODE_VERSION }}
-  #     uses: actions/setup-node@v3
-  #     with:
-  #       # node-version: ${{ matrix.node-version }}
-  #       node-version: ${{ env.NODE_VERSION }}
-  #       cache: 'npm'
-  #       cache-dependency-path: '${{ env.TRIVIA_CLIENT_DIRECTORY }}/package-lock.json'
-        
-  #   - name: Install PM2 globally
-  #     run: npm install -g pm2
-
-  #   - name: Install Angular globally
-  #     run: npm install -g @angular/cli@${{env.ANGULAR_VERSION}}
-
-  #   - name: Install docker dependencies for NEURONE-Core
+  #   - name: Copy ssh key of environment variables in local machine
   #     run: |
-  #       sudo apt-get update
-  #       sudo apt-get install ca-certificates curl gnupg lsb-release
+  #       echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+  #       echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+  #       chmod 600 ~/.ssh/id_rsa  
 
-  #   - name: Install docker and docker compose for NEURONE-Core
-  #     run: |
-  #       sudo apt-get update
-  #       sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose      
-
-  #   - name: Run MongoDB with Docker
-  #     run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
-  
-  #   - name: Cloning NEURONE-GM repository
-  #     uses: actions/checkout@v3
-  #     with:
-  #       repository: ${{ env.NEURONEGM_REPOSITORY }}
-  #       # token: 
-  #       path: ${{ env.NEURONEGM_REPOSITORY_FOLDER_NAME }}      
-
-  #   - name: Run NEURONE-GM Server with PM2
-  #     working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
-  #     run: |
-  #       npm install
-  #       # npm test
-  #       pm2 start app.js --name neurone-gm
-
-  #   - name: Cloning NEURONE-Core
-  #     uses: actions/checkout@v3
-  #     with:
-  #       repository: ${{ env.NEURONE_CORE_REPOSITORY }}
-  #       path: ${{ env.NEURONE_CORE_FOLDER_NAME }}
-
-  #   - name: Build NEURONE-Core
-  #     working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
-  #     run: ./${{ env.NEURONE_CORE_BUILD_SCRIPT }}
-      
-  #   - name: Create neurone-images folder
-  #     run: mkdir neurone-images
-      
-  #   - name: Save NEURONE-Core Images to Tar Files
-  #     working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
-  #     run: |
-  #       docker save -o mongo.tar dgacitua/mongo
-  #       docker save -o neurone.tar dgacitua/neurone      
-      
-  #   - name: Upload NEURONE-Core build artifact for deployment job
-  #     uses: actions/upload-artifact@v3
-  #     with:
-  #       name: neurone-images
-  #       path: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
-
-  #   - name: Start NEURONE-Core
-  #     working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
-  #     run: ./${{ env.NEURONE_CORE_START_SCRIPT }}
-
-  #   - name: Run Trivia Server with PM2
-  #     working-directory: ${{ env.TRIVIA_SERVER_DIRECTORY }}
-  #     run: |
-  #       npm install
-  #       # npm test
-  #       pm2 start app.js --name neurone-trivia
-
-  #   - name: Build Trivia Frontend
-  #     working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
-  #     run: |
-  #       npm install
-  #       ng build --prod --output-path ../Server/public  
-
-  #   - name: Upload trivia build artifact for deployment job
-  #     uses: actions/upload-artifact@v3
+  #   - name: Download Trivia build artifact from build job
+  #     uses: actions/download-artifact@v3
   #     with:
   #       name: build-trivia-frontend
   #       path: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
 
-  #   - name: docker images 2
-  #     run: docker images
+  #   - name: Send Build of Trivia to the server via ssh
+  #     uses: appleboy/scp-action@v0.1.4
+  #     with:
+  #       host: ${{ env.SERVER_IPV4 }}
+  #       username: ${{ env.SERVER_USERNAME }}
+  #       key: ${{ env.SSH_PRIVATE_KEY }}
+  #       port: ${{ env.SSH_PORT }}
+  #       source: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
+  #       target: ${{ env.BUILD_TRIVIA_SERVER_PATH_TARGET }}
+  #       strip_components: 3
 
 
 
-  send-build-trivia:
+  # send-build-neurone-core:
   
-    needs: [trivia-CI]
-    runs-on: ubuntu-22.04
+  #   needs: [neurone-core-CI]
+  #   runs-on: ubuntu-22.04
     
-    steps:
+  #   steps:
     
-    #Generate a pair of SSH keys that will be replaced later by the environment variable keys
-    - name: Create ssh-keygen pair
-      run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
+  #   #Generate a pair of SSH keys that will be replaced later by the environment variable keys
+  #   - name: Create ssh-keygen pair
+  #     run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
 
-    - name: Copy ssh key of environment variables in local machine
-      run: |
-        echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
-        echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa  
+  #   - name: Copy ssh key of environment variables in local machine
+  #     run: |
+  #       echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+  #       echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+  #       chmod 600 ~/.ssh/id_rsa  
 
-    - name: Download Trivia build artifact from build job
-      uses: actions/download-artifact@v3
-      with:
-        name: build-trivia-frontend
-        path: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
+  #   - name: Download NEURONE images artifact from build job
+  #     uses: actions/download-artifact@v3
+  #     with:
+  #       name: neurone-images
+  #       path: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
 
-    - name: Send Build of Trivia to the server via ssh
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ env.SERVER_IPV4 }}
-        username: ${{ env.SERVER_USERNAME }}
-        key: ${{ env.SSH_PRIVATE_KEY }}
-        port: ${{ env.SSH_PORT }}
-        source: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
-        target: ${{ env.BUILD_TRIVIA_SERVER_PATH_TARGET }}
-        strip_components: 3
-
-
-
-
-
-  send-build-neurone-core:
-  
-    needs: [neurone-core-CI]
-    runs-on: ubuntu-22.04
-    
-    steps:
-    
-    #Generate a pair of SSH keys that will be replaced later by the environment variable keys
-    - name: Create ssh-keygen pair
-      run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
-
-    - name: Copy ssh key of environment variables in local machine
-      run: |
-        echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
-        echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa  
-
-    - name: Download NEURONE images artifact from build job
-      uses: actions/download-artifact@v3
-      with:
-        name: neurone-images
-        path: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
-
-    - name: Transfer NEURONE-Core images files to server
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ env.SERVER_IPV4 }}
-        username: ${{ env.SERVER_USERNAME }}
-        key: ${{ env.SSH_PRIVATE_KEY }}
-        port: ${{ env.SSH_PORT }}
-        source: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
-        target: ${{ env.NEURONE_CORE_IMAGES_SERVER_PATH_TARGET }}
-        strip_components: 2
+  #   - name: Transfer NEURONE-Core images files to server
+  #     uses: appleboy/scp-action@v0.1.4
+  #     with:
+  #       host: ${{ env.SERVER_IPV4 }}
+  #       username: ${{ env.SERVER_USERNAME }}
+  #       key: ${{ env.SSH_PRIVATE_KEY }}
+  #       port: ${{ env.SSH_PORT }}
+  #       source: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
+  #       target: ${{ env.NEURONE_CORE_IMAGES_SERVER_PATH_TARGET }}
+  #       strip_components: 2
 
 
 
@@ -406,8 +290,8 @@ jobs:
 
   deploy:
   
-    # needs: [neurone-core-CI, neurone-gm-CI, trivia-CI]
-    needs: [send-build-trivia, send-build-neurone-core, neurone-gm-CI]
+    needs: [neurone-core-CI, neurone-gm-CI, trivia-CI]
+    # needs: [send-build-trivia, send-build-neurone-core, neurone-gm-CI]
     runs-on: ubuntu-22.04
     
     steps:
