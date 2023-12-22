@@ -8,7 +8,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-
 env:
   #Runs-on
   RUNS_ON: "Ubuntu 22.04"
@@ -54,7 +53,7 @@ env:
   SERVER_USERNAME: "neurone"
   # SERVER_PASSWORD: "claveneurone321."
   SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-  SERVER_IPV4: 161.35.105.118
+  SERVER_IPV4: 192.241.154.191
   SSH_PORT: 22
   BUILD_TRIVIA_SERVER_PATH_TARGET: "./build-trivia-frontend"
   NEURONE_CORE_IMAGES_SERVER_PATH_TARGET: "./neurone-images"
@@ -203,81 +202,86 @@ jobs:
         path: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
 
 
-  send-build-trivia:
+  # send-build-trivia:
   
-    needs: [trivia-CI]
-    runs-on: ubuntu-22.04
+  #   needs: [trivia-CI]
+  #   runs-on: ubuntu-22.04
     
-    steps:
+  #   steps:
     
-    #Generate a pair of SSH keys that will be replaced later by the environment variable keys
-    - name: Create ssh-keygen pair
-      run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
+  #   #Generate a pair of SSH keys that will be replaced later by the environment variable keys
+  #   - name: Create ssh-keygen pair
+  #     run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
 
-    - name: Copy ssh key of environment variables in local machine
-      run: |
-        echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
-        echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa  
+  #   - name: Copy ssh key of environment variables in local machine
+  #     run: |
+  #       echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+  #       echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+  #       chmod 600 ~/.ssh/id_rsa  
 
-    - name: Download Trivia build artifact from build job
-      uses: actions/download-artifact@v3
-      with:
-        name: build-trivia-frontend
-        path: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
+  #   - name: Download Trivia build artifact from build job
+  #     uses: actions/download-artifact@v3
+  #     with:
+  #       name: build-trivia-frontend
+  #       path: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
 
-    - name: Send Build of Trivia to the server via ssh
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ env.SERVER_IPV4 }}
-        username: ${{ env.SERVER_USERNAME }}
-        key: ${{ env.SSH_PRIVATE_KEY }}
-        port: ${{ env.SSH_PORT }}
-        source: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
-        target: ${{ env.BUILD_TRIVIA_SERVER_PATH_TARGET }}
-        strip_components: 3
+  #   - name: Send Build of Trivia to the server via ssh
+  #     uses: appleboy/scp-action@v0.1.4
+  #     with:
+  #       host: ${{ env.SERVER_IPV4 }}
+  #       username: ${{ env.SERVER_USERNAME }}
+  #       key: ${{ env.SSH_PRIVATE_KEY }}
+  #       port: ${{ env.SSH_PORT }}
+  #       source: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
+  #       target: ${{ env.BUILD_TRIVIA_SERVER_PATH_TARGET }}
+  #       strip_components: 3
 
 
 
-  send-build-neurone-core:
+
+
+
+
+
+  # send-build-neurone-core:
   
-    needs: [neurone-core-CI]
-    runs-on: ubuntu-22.04
+  #   needs: [neurone-core-CI]
+  #   runs-on: ubuntu-22.04
     
-    steps:
+  #   steps:
     
-    #Generate a pair of SSH keys that will be replaced later by the environment variable keys
-    - name: Create ssh-keygen pair
-      run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
+  #   #Generate a pair of SSH keys that will be replaced later by the environment variable keys
+  #   - name: Create ssh-keygen pair
+  #     run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
 
-    - name: Copy ssh key of environment variables in local machine
-      run: |
-        echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
-        echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa  
+  #   - name: Copy ssh key of environment variables in local machine
+  #     run: |
+  #       echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+  #       echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+  #       chmod 600 ~/.ssh/id_rsa  
 
-    - name: Download NEURONE images artifact from build job
-      uses: actions/download-artifact@v3
-      with:
-        name: neurone-images
-        path: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
+  #   - name: Download NEURONE images artifact from build job
+  #     uses: actions/download-artifact@v3
+  #     with:
+  #       name: neurone-images
+  #       path: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
 
-    - name: Transfer NEURONE-Core images files to server
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ env.SERVER_IPV4 }}
-        username: ${{ env.SERVER_USERNAME }}
-        key: ${{ env.SSH_PRIVATE_KEY }}
-        port: ${{ env.SSH_PORT }}
-        source: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
-        target: ${{ env.NEURONE_CORE_IMAGES_SERVER_PATH_TARGET }}
-        strip_components: 2
+  #   - name: Transfer NEURONE-Core images files to server
+  #     uses: appleboy/scp-action@v0.1.4
+  #     with:
+  #       host: ${{ env.SERVER_IPV4 }}
+  #       username: ${{ env.SERVER_USERNAME }}
+  #       key: ${{ env.SSH_PRIVATE_KEY }}
+  #       port: ${{ env.SSH_PORT }}
+  #       source: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
+  #       target: ${{ env.NEURONE_CORE_IMAGES_SERVER_PATH_TARGET }}
+  #       strip_components: 2
 
 
   deploy:
   
-    # needs: [neurone-core-CI, neurone-gm-CI, trivia-CI]
-    needs: [send-build-trivia, send-build-neurone-core, neurone-gm-CI]
+    needs: [neurone-core-CI, neurone-gm-CI, trivia-CI]
+    # needs: [send-build-trivia, send-build-neurone-core, neurone-gm-CI]
     runs-on: ubuntu-22.04
     
     steps:
