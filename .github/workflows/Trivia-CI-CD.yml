@@ -2,11 +2,11 @@
 name: NEURONE-Trivia CI-CD
 
 on:
-  workflow_dispatch:
-  # push:
-  #   branches: [ "main" ]
-  # pull_request:
-  #   branches: [ "main" ]
+  # workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 
 env:
@@ -52,9 +52,9 @@ env:
 
   #Server Data
   SERVER_USERNAME: "neurone"
-  SERVER_PASSWORD: "claveneurone321."
-  # SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-  SERVER_IPV4: 142.93.198.201
+  # SERVER_PASSWORD: "claveneurone321."
+  SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+  SERVER_IPV4: 67.205.160.114
   SSH_PORT: 22
   BUILD_TRIVIA_SERVER_PATH_TARGET: "./apps/GAME/Server"
   NEURONE_CORE_IMAGES_SERVER_PATH_TARGET: "./neurone-images"
