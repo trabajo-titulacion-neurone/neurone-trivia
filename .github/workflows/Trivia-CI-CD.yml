@@ -274,20 +274,6 @@ jobs:
         strip_components: 2
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   deploy:
   
     # needs: [neurone-core-CI, neurone-gm-CI, trivia-CI]
@@ -306,28 +292,6 @@ jobs:
         echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa  
         
-    # - name: Download Trivia build artifact from build job
-    #   uses: actions/download-artifact@v3
-    #   with:
-    #     name: build-trivia-frontend
-    #     path: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
-
-    # - name: Download NEURONE images artifact from build job
-    #   uses: actions/download-artifact@v3
-    #   with:
-    #     name: neurone-images
-    #     path: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
-
-    # - name: Transfer NEURONE-Core images files to server
-    #   uses: appleboy/scp-action@v0.1.4
-    #   with:
-    #     host: ${{ env.SERVER_IPV4 }}
-    #     username: ${{ env.SERVER_USERNAME }}
-    #     key: ${{ env.SSH_PRIVATE_KEY }}
-    #     port: ${{ env.SSH_PORT }}
-    #     source: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
-    #     target: ${{ env.NEURONE_CORE_IMAGES_SERVER_PATH_TARGET }}
-    #     strip_components: 2
         
     - name: Cloning NEURONE-Trivia-Deployment repository
       uses: actions/checkout@v3
@@ -358,14 +322,3 @@ jobs:
               ansible_python_interpreter: /usr/bin/python3        
         options: |
           --extra-vars ansible_become_pass=${{ env.SERVER_PASSWORD }}
-
-    # - name: Build of Trivia is sent to the server via ssh
-    #   uses: appleboy/scp-action@v0.1.4
-    #   with:
-    #     host: ${{ env.SERVER_IPV4 }}
-    #     username: ${{ env.SERVER_USERNAME }}
-    #     key: ${{ env.SSH_PRIVATE_KEY }}
-    #     port: ${{ env.SSH_PORT }}
-    #     source: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
-    #     target: ${{ env.BUILD_TRIVIA_SERVER_PATH_TARGET }}
-    #     strip_components: 3
