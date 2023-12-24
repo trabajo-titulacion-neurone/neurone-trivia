@@ -53,7 +53,7 @@ env:
   SERVER_USERNAME: "neurone"
   # SERVER_PASSWORD: "claveneurone321."
   SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-  SERVER_IPV4: 198.211.105.95
+  SERVER_IPV4: 142.93.206.150
   SSH_PORT: 22
   BUILD_TRIVIA_SERVER_PATH_TARGET: "./build-trivia-frontend"
   NEURONE_CORE_IMAGES_SERVER_PATH_TARGET: "./neurone-images"
@@ -309,30 +309,22 @@ jobs:
       run: |
         awk '/- {role: node-with-nvm,/ {print "    - {role: node-with-nvm, node_version: \"${{ env.NODE_VERSION }}\", angular_version: \"${{ env.ANGULAR_VERSION }}\"}"; next} 1' ./playbook.yaml > ./playbook.yaml.tmp && mv ./playbook.yaml.tmp ./playbook.yaml    
       
-    # - name: Deploy on server using Ansible with NEURONE-Trivia-Deployment repository
-    #   uses: dawidd6/action-ansible-playbook@v2
-    #   with:
-    #     playbook: playbook.yaml # Required, playbook filepath
-    #     directory: ${{ env.NEURONE_TRIVIA_ANSIBLE_FILES_DIRECTORY }} # Optional, directory where playbooks live
-    #     key: ${{ env.SSH_PRIVATE_KEY }} #SSH private key
-    #     inventory: |
-    #       webservers:
-    #         hosts:
-    #           neurone-trivia-dev:
-    #             ansible_host: ${{ env.SERVER_IPV4 }}
-    #             ansible_user: ${{ env.SERVER_USERNAME }}
+    - name: Deploy on server using Ansible with NEURONE-Trivia-Deployment repository
+      uses: dawidd6/action-ansible-playbook@v2
+      with:
+        playbook: playbook.yaml # Required, playbook filepath
+        directory: ${{ env.NEURONE_TRIVIA_ANSIBLE_FILES_DIRECTORY }} # Optional, directory where playbooks live
+        key: ${{ env.SSH_PRIVATE_KEY }} #SSH private key
+        inventory: |
+          webservers:
+            hosts:
+              neurone-trivia-dev:
+                ansible_host: ${{ env.SERVER_IPV4 }}
+                ansible_user: ${{ env.SERVER_USERNAME }}
           
-    #         vars:
-    #           ansible_python_interpreter: /usr/bin/python3        
-    #     options: |
-    #       --extra-vars ansible_become_pass=${{ env.SERVER_PASSWORD }}
+            vars:
+              ansible_python_interpreter: /usr/bin/python3        
+        options: |
+          --extra-vars ansible_become_pass=${{ env.SERVER_PASSWORD }}
 
-
-
-
-
-
-    - name: correr ansible con comandos
-      working-directory: ${{ env.NEURONE_TRIVIA_ANSIBLE_FILES_DIRECTORY }}
-      run: ansible-playbook -i inventory.yaml playbook.yaml --extra-vars ansible_become_pass=${{ env.SERVER_PASSWORD }}
 
