@@ -50,9 +50,9 @@ env:
   NEURONE_CORE_IMAGES_PATH_SOURCE: "./neurone-images"
 
   #Server Data
-  # SERVER_USERNAME: "neurone"
+  SERVER_USERNAME: "neurone"
   SERVER_PASSWORD: "claveneurone321."
-  SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+  # SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
   SERVER_IPV4: 142.93.200.53
   SSH_PORT: 22
   BUILD_TRIVIA_SERVER_PATH_TARGET: "./build-trivia-frontend"
