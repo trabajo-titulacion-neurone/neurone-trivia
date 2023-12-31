@@ -311,7 +311,7 @@ jobs:
     - name: Deploy on server using Ansible with NEURONE-Trivia-Deployment repository
       uses: dawidd6/action-ansible-playbook@v2
       with:
-        playbook: playbook.yaml # Required, playbook filepath
+        playbook: playbook-github-actions.yaml # Required, playbook filepath
         directory: ${{ env.NEURONE_TRIVIA_ANSIBLE_FILES_DIRECTORY }} # Optional, directory where playbooks live
         key: ${{ env.SSH_PRIVATE_KEY }} #SSH private key
         inventory: |
