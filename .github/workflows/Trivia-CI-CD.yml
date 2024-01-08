@@ -89,8 +89,8 @@ jobs:
     - run: docker ps
     - run: docker images
     - run: docker volume
-    # - run: docker pull mongo:4
-    # - run: docker tag mongo:4 neurone/mongo:4
+    - run: docker pull mongo:4
+    - run: docker tag mongo:4 neurone/mongo:4
     - run: |
         docker image ls --filter "label=com.docker.compose.project=neurone" --format "{{.ID}}:{{.Repository}}:{{.Tag}}"
 
