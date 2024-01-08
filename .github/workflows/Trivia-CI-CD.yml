@@ -91,13 +91,11 @@ jobs:
 
 
 
-        
     
     # - name: Get image IDs and names images
     #   run: |
     #     image_info=$(docker images --filter "label=com.docker.compose.project=neurone" --format "{{.ID}}:{{.Repository}}:{{.Tag}}")
     #     echo "::set-output name=image_info::$image_info"
-
 
 
 
