@@ -66,28 +66,28 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    # - name: Cloning NEURONE-Core
-    #   uses: actions/checkout@v3
-    #   with:
-    #     repository: ${{ env.NEURONE_CORE_REPOSITORY }}
-    #     path: ${{ env.NEURONE_CORE_FOLDER_NAME }}
+    - name: Cloning NEURONE-Core
+      uses: actions/checkout@v3
+      with:
+        repository: ${{ env.NEURONE_CORE_REPOSITORY }}
+        path: ${{ env.NEURONE_CORE_FOLDER_NAME }}
 
-    # - name: Install docker dependencies for NEURONE-Core
-    #   run: |
-    #     sudo apt-get update
-    #     sudo apt-get install ca-certificates curl gnupg lsb-release
+    - name: Install docker dependencies for NEURONE-Core
+      run: |
+        sudo apt-get update
+        sudo apt-get install ca-certificates curl gnupg lsb-release
 
-    # - name: Install docker and docker compose for NEURONE-Core
-    #   run: |
-    #     sudo apt-get update
-    #     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose  
+    - name: Install docker and docker compose for NEURONE-Core
+      run: |
+        sudo apt-get update
+        sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose  
 
-    # - name: Build NEURONE-Core
-    #   working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
-    #   run: ./${{ env.NEURONE_CORE_BUILD_SCRIPT }}
+    - name: Build NEURONE-Core
+      working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
+      run: ./${{ env.NEURONE_CORE_BUILD_SCRIPT }}
       
-    # - run: |
-    #     docker image ls --filter "label=com.docker.compose.project=neurone" --format "{{.ID}}:{{.Repository}}:{{.Tag}}"
+    - run: |
+        docker image ls --filter "label=com.docker.compose.project=neurone" --format "{{.ID}}:{{.Repository}}:{{.Tag}}"
 
 
 
@@ -125,8 +125,8 @@ jobs:
         done
 
     - name: ls para ver si la tarea se realizó
-      run: ls
       working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
+      run: ls
       
     - name : docker ps de nuevo
       run: docker ps
