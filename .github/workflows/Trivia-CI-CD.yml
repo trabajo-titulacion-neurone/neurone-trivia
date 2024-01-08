@@ -85,19 +85,25 @@ jobs:
     # - name: Build NEURONE-Core
     #   working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
     #   run: ./${{ env.NEURONE_CORE_BUILD_SCRIPT }}
-
-    # - run: docker ps
-    # - run: docker images
-    # - run: docker volume
-    # - run: docker pull mongo:4
-    # - run: docker tag mongo:4 neurone/mongo:4
+      
     # - run: |
     #     docker image ls --filter "label=com.docker.compose.project=neurone" --format "{{.ID}}:{{.Repository}}:{{.Tag}}"
+
+
+
+        
     
     # - name: Get image IDs and names images
     #   run: |
     #     image_info=$(docker images --filter "label=com.docker.compose.project=neurone" --format "{{.ID}}:{{.Repository}}:{{.Tag}}")
     #     echo "::set-output name=image_info::$image_info"
+
+
+
+
+
+
+
     
     - name: Get image IDs and names images
       run: |
