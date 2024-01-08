@@ -71,6 +71,11 @@ jobs:
     - run: docker images
     - run: docker volumes
     - run: docker ls
+    - run: |
+        docker pull mongo:4
+        docker tag mongo:4 neurone/mongo:4
+        docker image ls --filter "label=com.docker.compose.project=neurone" --format "{{.ID}}:{{.Repository}}:{{.Tag}}"
+
 
   #   - name: Cloning NEURONE-Core
   #     uses: actions/checkout@v3
