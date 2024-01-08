@@ -73,7 +73,8 @@ jobs:
     - name: build mongo
     - run: docker pull mongo:4
     - run: docker tag mongo:4 neurone/mongo:4
-    - run: docker image ls --filter "label=com.docker.compose.project=neurone" --format "{{.ID}}:{{.Repository}}:{{.Tag}}"
+    - run: |
+        docker image ls --filter "label=com.docker.compose.project=neurone" --format "{{.ID}}:{{.Repository}}:{{.Tag}}"
       # run: |
       #   docker pull mongo:4
       #   docker tag mongo:4 neurone/mongo:4
