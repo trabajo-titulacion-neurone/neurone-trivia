@@ -135,9 +135,9 @@ jobs:
 
     
 
-    - name: ls para ver si la tarea se realizó
-      working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
-      run: ls
+    # - name: ls para ver si la tarea se realizó
+    #   working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
+    #   run: ls
       
     - name : docker ps de nuevo
       run: docker ps
