@@ -86,8 +86,40 @@ jobs:
       working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
       run: ./${{ env.NEURONE_CORE_BUILD_SCRIPT }}
 
+    - name: Create neurone-images folder
+      run: mkdir neurone-images
+
+    - name: Save NEURONE-Core Images on Tar Files
+      working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
+      run: |
+        docker save -o mongo.tar dgacitua/mongo
+        docker save -o neurone.tar dgacitua/neurone
+        
+        # Identify the IMAGE ID of the unnamed image
+        IMAGE_ID=$(docker images | grep "<none>" | awk '{print $3}')
+
+        # Save the image on Tar file
+        docker save -o neurone2.tar $IMAGE_ID
+      
+    - name: Upload NEURONE-Core build artifact for deployment job
+      uses: actions/upload-artifact@v3
+      with:
+        name: neurone-images
+        path: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
+
+    - name: Start NEURONE-Core
+      working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
+      run: ./${{ env.NEURONE_CORE_START_SCRIPT }}
+
+    - name: ls para ver si la tarea se realizó
+      working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
+      run: ls
 
 
+
+
+
+  
 
 
 
@@ -122,22 +154,23 @@ jobs:
     #     done
 
 
-    - name: Rename Neurone Image with no name
-      run: |
-        # Identificar el IMAGE ID de la imagen sin nombre
-        IMAGE_ID=$(docker images | grep "<none>" | awk '{print $3}')
+    # - name: Rename Neurone Image with no name
+    #   run: |
+    #     # Identificar el IMAGE ID de la imagen sin nombre
+    #     IMAGE_ID=$(docker images | grep "<none>" | awk '{print $3}')
 
-        # Asignar un nuevo nombre y etiqueta
-        docker tag $IMAGE_ID dgacitua/neurone2:latest
+    #     # Asignar un nuevo nombre y etiqueta
+    #     docker tag $IMAGE_ID dgacitua/neurone2:latest
 
-        # Eliminar la imagen sin nombre
-        docker rmi $IMAGE_ID
+    #     # Eliminar la imagen sin nombre
+    #     docker rmi $IMAGE_ID
 
-    
 
-    # - name: ls para ver si la tarea se realizó
-    #   working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
-    #   run: ls
+
+
+
+
+
       
     - name : docker ps de nuevo
       run: docker ps
