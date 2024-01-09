@@ -86,58 +86,54 @@ jobs:
       working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
       run: ./${{ env.NEURONE_CORE_BUILD_SCRIPT }}
 
-    # - name: Get neurone images list
-    #   run: |
+
+
+
+
+
+    # - run: |
     #     docker image ls --filter "label=com.docker.compose.project=neurone" --format "{{.ID}}:{{.Repository}}:{{.Tag}}"
 
-
-
     
-    # - name: Get image IDs and names images
+    # - name: Get image IDs and names
+    #   id: GetImageIDs
     #   run: |
-    #     image_info=$(docker images --filter "label=com.docker.compose.project=neurone" --format "{{.ID}}:{{.Repository}}:{{.Tag}}")
-    #     echo "::set-output name=image_info::$image_info"
+    #     images_neurone_info=$(docker images --filter "label=com.docker.compose.project=neurone" --format "{{.ID}}:{{.Repository}}:{{.Tag}}") 
+    #     echo "{images_neurone_info}" = "{images_neurone}" >> $GITHUB_OUTPUT
+    
+    # - name: Create directory for neurone images
+    #   run: mkdir neurone-images 
+
+    # - name: ver salida
+    #   working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}      
+    #   run: |
+    #     echo "${{ steps.GetImageIDs.outputs.images_neurone }}"
+
+    # - name: Save neurone images on tar files
+    #   working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}      
+    #   run: |
+    #     echo "${{ steps.GetImageIDs.outputs.images_neurone_info }}"
+    #     for info in ${{ steps.GetImageIDs.outputs.images_neurone }}; do
+    #       id=$(echo $info | cut -d':' -f1)
+    #       name=$(echo $info | cut -d':' -f2)
+    #       # Si el nombre es vacío, asigna "no-name" como nombre del archivo
+    #       [ -z "$name" ] && name="no-name"
+    #       docker save -o "${name}.tar" $id
+    #     done
 
 
+    - name: Rename Neurone Image with no name
+      run: |
+        # Identificar el IMAGE ID de la imagen sin nombre
+        IMAGE_ID=$(docker images | grep "<none>" | awk '{print $3}')
 
+        # Asignar un nuevo nombre y etiqueta
+        docker tag $IMAGE_ID dgacitua/neurone2:latest
 
-
-
-
-
-    - run: |
-        docker image ls --filter "label=com.docker.compose.project=neurone" --format "{{.ID}}:{{.Repository}}:{{.Tag}}"
+        # Eliminar la imagen sin nombre
+        docker rmi $IMAGE_ID
 
     
-    - name: Get image IDs and names
-      id: GetImageIDs
-      run: |
-        images_neurone_info=$(docker images --filter "label=com.docker.compose.project=neurone" --format "{{.ID}}:{{.Repository}}:{{.Tag}}") 
-        echo "{images_neurone_info}" = "{images_neurone}" >> $GITHUB_OUTPUT
-    
-    - name: Create directory for neurone images
-      run: mkdir neurone-images 
-
-    - name: ver salida
-      working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}      
-      run: |
-        echo "${{ steps.GetImageIDs.outputs.images_neurone }}"
-
-    - name: Save neurone images on tar files
-      working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}      
-      run: |
-        echo "${{ steps.GetImageIDs.outputs.images_neurone_info }}"
-        for info in ${{ steps.GetImageIDs.outputs.images_neurone }}; do
-          id=$(echo $info | cut -d':' -f1)
-          name=$(echo $info | cut -d':' -f2)
-          # Si el nombre es vacío, asigna "no-name" como nombre del archivo
-          [ -z "$name" ] && name="no-name"
-          docker save -o "${name}.tar" $id
-        done
-
-    - name: ls para ver si la tarea se realizó
-      working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
-      run: ls
 
     - name: ls para ver si la tarea se realizó
       working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
