@@ -85,9 +85,10 @@ jobs:
     - name: Build NEURONE-Core
       working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
       run: ./${{ env.NEURONE_CORE_BUILD_SCRIPT }}
-      
-    - run: |
-        docker image ls --filter "label=com.docker.compose.project=neurone" --format "{{.ID}}:{{.Repository}}:{{.Tag}}"
+
+    # - name: Get neurone images list
+    #   run: |
+    #     docker image ls --filter "label=com.docker.compose.project=neurone" --format "{{.ID}}:{{.Repository}}:{{.Tag}}"
 
 
 
@@ -103,7 +104,8 @@ jobs:
 
 
     
-    - name: Get image IDs and names images
+    - name: Get image IDs and names
+      id: GetImageIDs
       run: |
         images_neurone_info=$(docker images --filter "label=com.docker.compose.project=neurone" --format "{{.ID}}:{{.Repository}}:{{.Tag}}") 
         echo "{images_neurone_info}" = "{images_neurone_info}" >> $GITHUB_OUTPUT
@@ -114,7 +116,7 @@ jobs:
     - name: Save neurone images on tar files
       working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}      
       run: |
-        for info in ${{ steps.GetImageIDs.outputs.image_info }}; do
+        for info in ${{ steps.GetImageIDs.outputs.images_neurone_info }}; do
           id=$(echo $info | cut -d':' -f1)
           name=$(echo $info | cut -d':' -f2)
           # Si el nombre es vacío, asigna "no-name" como nombre del archivo
