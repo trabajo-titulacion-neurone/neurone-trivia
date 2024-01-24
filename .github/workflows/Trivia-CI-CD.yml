@@ -94,12 +94,6 @@ jobs:
   #     run: |
   #       docker save -o mongo.tar dgacitua/mongo
   #       docker save -o neurone.tar dgacitua/neurone
-        
-  #       # Identify the IMAGE ID of the unnamed image
-  #       IMAGE_ID=$(docker images | grep "<none>" | awk '{print $3}')
-
-  #       # Save the image on Tar file
-  #       docker save -o neurone2.tar $IMAGE_ID
       
   #   - name: Upload NEURONE-Core build artifact for deployment job
   #     uses: actions/upload-artifact@v3
@@ -110,10 +104,6 @@ jobs:
   #   - name: Start NEURONE-Core
   #     working-directory: ${{ env.NEURONE_CORE_DIRECTORY }}
   #     run: ./${{ env.NEURONE_CORE_START_SCRIPT }}
-
-  #   - name: ls para ver si la tarea se realizó
-  #     working-directory: ${{ env.NEURONE_CORE_IMAGES_PATH_SOURCE }}
-  #     run: ls
 
     
 
