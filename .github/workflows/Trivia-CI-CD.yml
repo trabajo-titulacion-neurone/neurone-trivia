@@ -303,10 +303,10 @@ jobs:
         # token: 
         path: ${{ env.NEURONE_TRIVIA_DEPLOY_REPOSITORY_FOLDER_NAME }}      
       
-    - name: Update Playbook with Node and Angular version of environment variables (Optional)
-      working-directory: ${{ env.NEURONE_TRIVIA_ANSIBLE_FILES_DIRECTORY }}
-      run: |
-        awk '/- {role: node-with-nvm,/ {print "    - {role: node-with-nvm, node_version: \"${{ env.NODE_VERSION }}\", angular_version: \"${{ env.ANGULAR_VERSION }}\"}"; next} 1' ./playbook.yaml > ./playbook.yaml.tmp && mv ./playbook.yaml.tmp ./playbook.yaml    
+    # - name: Update Playbook with Node and Angular version of environment variables (Optional)
+    #   working-directory: ${{ env.NEURONE_TRIVIA_ANSIBLE_FILES_DIRECTORY }}
+    #   run: |
+    #     awk '/- {role: node-with-nvm,/ {print "    - {role: node-with-nvm, node_version: \"${{ env.NODE_VERSION }}\", angular_version: \"${{ env.ANGULAR_VERSION }}\"}"; next} 1' ./playbook.yaml > ./playbook.yaml.tmp && mv ./playbook.yaml.tmp ./playbook.yaml    
       
     - name: Deploy on server using Ansible with NEURONE-Trivia-Deployment repository
       uses: dawidd6/action-ansible-playbook@v2
