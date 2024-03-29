@@ -198,7 +198,9 @@ jobs:
 
     - name: Build Trivia frontend
       working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
-      run: ng build --prod --output-path ../Server/public    
+      run: | 
+        npm install file-saver
+        ng build --prod --output-path ../Server/public    
       
     - name: Upload trivia build to Artifact Storage for deployment job
       uses: actions/upload-artifact@v3
