@@ -151,58 +151,58 @@ jobs:
 
 
 
-  # trivia-CI:
+  trivia-CI:
   
-  #   runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04
 
-  #   steps:
+    steps:
     
-  #   - name: Cloning Trivia repository
-  #     uses: actions/checkout@v3
-  #     with:
-  #       path: ${{ env.TRIVIA_REPOSITORY_FOLDER_NAME }}     
+    - name: Cloning Trivia repository
+      uses: actions/checkout@v3
+      with:
+        path: ${{ env.TRIVIA_REPOSITORY_FOLDER_NAME }}     
 
-  #   - name: Use Node.js ${{ env.NODE_VERSION }}
-  #     uses: actions/setup-node@v3
-  #     with:
-  #       # node-version: ${{ matrix.node-version }}
-  #       node-version: ${{ env.NODE_VERSION }}
-  #       cache: 'npm'
-  #       cache-dependency-path: '${{ env.TRIVIA_CLIENT_DIRECTORY }}/package-lock.json'   
+    - name: Use Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v3
+      with:
+        # node-version: ${{ matrix.node-version }}
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: '${{ env.TRIVIA_CLIENT_DIRECTORY }}/package-lock.json'   
 
-  #   - name: Install PM2 globally
-  #     run: npm install -g pm2
+    - name: Install PM2 globally
+      run: npm install -g pm2
       
-  #   - name: Install Angular globally
-  #     run: npm install -g @angular/cli@${{env.ANGULAR_VERSION}}
+    - name: Install Angular globally
+      run: npm install -g @angular/cli@${{env.ANGULAR_VERSION}}
       
-  #   - name: Install backend dependencies
-  #     working-directory: ${{ env.TRIVIA_SERVER_DIRECTORY }}
-  #     run: npm install
+    - name: Install backend dependencies
+      working-directory: ${{ env.TRIVIA_SERVER_DIRECTORY }}
+      run: npm install
 
-  #   - name: Run backend tests (continue with error)
-  #     working-directory: ${{ env.TRIVIA_SERVER_DIRECTORY }}
-  #     run: npm test --timeout 100000
-  #     continue-on-error: true  
+    - name: Run backend tests (continue with error)
+      working-directory: ${{ env.TRIVIA_SERVER_DIRECTORY }}
+      run: npm test --timeout 100000
+      continue-on-error: true  
 
-  #   - name: Install frontend dependencies
-  #     working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
-  #     run: npm install
+    - name: Install frontend dependencies
+      working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
+      run: npm install
 
-  #   - name: Run frontend tests (continue with error)
-  #     working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
-  #     run: npm test --timeout 100000
-  #     continue-on-error: true  
+    - name: Run frontend tests (continue with error)
+      working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
+      run: npm test --timeout 100000
+      continue-on-error: true  
 
-  #   - name: Build Trivia frontend
-  #     working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
-  #     run: ng build --prod --output-path ../Server/public    
+    - name: Build Trivia frontend
+      working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
+      run: ng build --prod --output-path ../Server/public    
       
-  #   - name: Upload trivia build to Artifact Storage for deployment job
-  #     uses: actions/upload-artifact@v3
-  #     with:
-  #       name: build-trivia-frontend
-  #       path: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
+    - name: Upload trivia build to Artifact Storage for deployment job
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-trivia-frontend
+        path: ${{ env.BUILD_TRIVIA_LOCAL_PATH_SOURCE }}
 
 
 
@@ -277,53 +277,53 @@ jobs:
   #       strip_components: 2
 
 
-  deploy:
+  # deploy:
   
-    # needs: [neurone-core-CI, neurone-gm-CI, trivia-CI]
-    # needs: [send-build-trivia, send-build-neurone-core, neurone-gm-CI]
-    runs-on: ubuntu-22.04
+  #   # needs: [neurone-core-CI, neurone-gm-CI, trivia-CI]
+  #   # needs: [send-build-trivia, send-build-neurone-core, neurone-gm-CI]
+  #   runs-on: ubuntu-22.04
     
-    steps:
+  #   steps:
     
-    #Generate a pair of SSH keys that will be replaced later by the environment variable keys
-    - name: Create ssh-keygen pair
-      run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
+  #   #Generate a pair of SSH keys that will be replaced later by the environment variable keys
+  #   - name: Create ssh-keygen pair
+  #     run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
 
-    - name: Copy ssh key of environment variables in local machine
-      run: |
-        echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
-        echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa  
+  #   - name: Copy ssh key of environment variables in local machine
+  #     run: |
+  #       echo "${{ env.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+  #       echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+  #       chmod 600 ~/.ssh/id_rsa  
         
         
-    - name: Cloning NEURONE-Trivia-Deployment repository
-      uses: actions/checkout@v3
-      with:
-        repository: ${{ env.NEURONE_TRIVIA_DEPLOY_REPOSITORY }}
-        # token: 
-        path: ${{ env.NEURONE_TRIVIA_DEPLOY_REPOSITORY_FOLDER_NAME }}      
+  #   - name: Cloning NEURONE-Trivia-Deployment repository
+  #     uses: actions/checkout@v3
+  #     with:
+  #       repository: ${{ env.NEURONE_TRIVIA_DEPLOY_REPOSITORY }}
+  #       # token: 
+  #       path: ${{ env.NEURONE_TRIVIA_DEPLOY_REPOSITORY_FOLDER_NAME }}      
       
-    # - name: Update Playbook with Node and Angular version of environment variables (Optional)
-    #   working-directory: ${{ env.NEURONE_TRIVIA_ANSIBLE_FILES_DIRECTORY }}
-    #   run: |
-    #     awk '/- {role: node-with-nvm,/ {print "    - {role: node-with-nvm, node_version: \"${{ env.NODE_VERSION }}\", angular_version: \"${{ env.ANGULAR_VERSION }}\"}"; next} 1' ./playbook.yaml > ./playbook.yaml.tmp && mv ./playbook.yaml.tmp ./playbook.yaml    
+  #   # - name: Update Playbook with Node and Angular version of environment variables (Optional)
+  #   #   working-directory: ${{ env.NEURONE_TRIVIA_ANSIBLE_FILES_DIRECTORY }}
+  #   #   run: |
+  #   #     awk '/- {role: node-with-nvm,/ {print "    - {role: node-with-nvm, node_version: \"${{ env.NODE_VERSION }}\", angular_version: \"${{ env.ANGULAR_VERSION }}\"}"; next} 1' ./playbook.yaml > ./playbook.yaml.tmp && mv ./playbook.yaml.tmp ./playbook.yaml    
       
-    - name: Deploy on server using Ansible with NEURONE-Trivia-Deployment repository
-      uses: dawidd6/action-ansible-playbook@v2
-      with:
-        playbook: deploy-prod-server.yaml # Required, playbook filepath
-        directory: ${{ env.NEURONE_TRIVIA_ANSIBLE_FILES_DIRECTORY }} # Optional, directory where playbooks live
-        key: ${{ env.SSH_PRIVATE_KEY }} #SSH private key
-        inventory: |
-          webservers:
-            hosts:
-              neurone-trivia-dev:
-                ansible_host: ${{ env.SERVER_IPV4 }}
-                ansible_user: ${{ env.SERVER_USERNAME }}
+  #   - name: Deploy on server using Ansible with NEURONE-Trivia-Deployment repository
+  #     uses: dawidd6/action-ansible-playbook@v2
+  #     with:
+  #       playbook: deploy-prod-server.yaml # Required, playbook filepath
+  #       directory: ${{ env.NEURONE_TRIVIA_ANSIBLE_FILES_DIRECTORY }} # Optional, directory where playbooks live
+  #       key: ${{ env.SSH_PRIVATE_KEY }} #SSH private key
+  #       inventory: |
+  #         webservers:
+  #           hosts:
+  #             neurone-trivia-dev:
+  #               ansible_host: ${{ env.SERVER_IPV4 }}
+  #               ansible_user: ${{ env.SERVER_USERNAME }}
           
-            vars:
-              ansible_python_interpreter: /usr/bin/python3        
-        options: |
-          --extra-vars ansible_become_pass=${{ env.SERVER_PASSWORD }}
+  #           vars:
+  #             ansible_python_interpreter: /usr/bin/python3        
+  #       options: |
+  #         --extra-vars ansible_become_pass=${{ env.SERVER_PASSWORD }}
 
 
