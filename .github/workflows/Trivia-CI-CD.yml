@@ -25,7 +25,7 @@ env:
   NEURONEGM_DATABASE_USER: "neuroneAdmin"
   NEURONEGM_DATABASE_PASSWORD: ${{ secrets.NEURONEGM_DATABASE_PASSWORD }}
 
-  NEURONEGM_REPOSITORY: "gerardoluceroc/NEURONE-GM"
+  NEURONEGM_REPOSITORY: "NEURONE-IL/NEURONE-GM"
   NEURONEGM_REPOSITORY_FOLDER_NAME: "NEURONE-GM"
   NEURONEGM_SERVER_DIRECTORY: "./NEURONE-GM/Server"
 
@@ -111,44 +111,44 @@ jobs:
 
       
 
-  # neurone-gm-CI:
+  neurone-gm-CI:
   
-  #   runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04
 
-  #   steps:
+    steps:
        
-  #   - name: Cloning NEURONE-GM repository
-  #     uses: actions/checkout@v3
-  #     with:
-  #       repository: ${{ env.NEURONEGM_REPOSITORY }}
-  #       path: ${{ env.NEURONEGM_REPOSITORY_FOLDER_NAME }}  
+    - name: Cloning NEURONE-GM repository
+      uses: actions/checkout@v3
+      with:
+        repository: ${{ env.NEURONEGM_REPOSITORY }}
+        path: ${{ env.NEURONEGM_REPOSITORY_FOLDER_NAME }}  
 
-  #   - name: Use Node.js ${{ env.NODE_VERSION }}
-  #     uses: actions/setup-node@v3
-  #     with:
-  #       # node-version: ${{ matrix.node-version }}
-  #       node-version: ${{ env.NODE_VERSION }}
-  #       cache: 'npm'
-  #       cache-dependency-path: '${{ env.NEURONEGM_SERVER_DIRECTORY }}/package-lock.json' 
+    - name: Use Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v3
+      with:
+        # node-version: ${{ matrix.node-version }}
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: '${{ env.NEURONEGM_SERVER_DIRECTORY }}/package-lock.json' 
         
-  #   - name: Install PM2 globally
-  #     run: npm install -g pm2
+    - name: Install PM2 globally
+      run: npm install -g pm2
       
-  #   - name: Run MongoDB with Docker
-  #     run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
+    - name: Run MongoDB with Docker
+      run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
 
-  #   - name: Install Dependencies
-  #     working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
-  #     run: npm install
+    - name: Install Dependencies
+      working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
+      run: npm install
 
-  #   - name: Run test (continue with error)
-  #     working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
-  #     run: npm test --timeout 100000
-  #     continue-on-error: true
+    - name: Run test (continue with error)
+      working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
+      run: npm test --timeout 100000
+      continue-on-error: true
 
-  #   - name: Run NEURONE-GM Server with PM2
-  #     working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
-  #     run: pm2 start app.js --name neurone-gm
+    - name: Run NEURONE-GM Server with PM2
+      working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
+      run: pm2 start app.js --name neurone-gm
 
 
 
