@@ -163,7 +163,7 @@ jobs:
       with:
         path: ${{ env.TRIVIA_REPOSITORY_FOLDER_NAME }} 
         repository: ${{ env.TRIVIA_REPOSITORY }}
-        ref: "0c06c9a972bec72d4dfce1d7e7b1d3e36d57effb"
+        ref: "4f76921737977db29a1fccdf468e7a0c5000f58a"
 
     - name: Use Node.js ${{ env.NODE_VERSION }}
       uses: actions/setup-node@v3
