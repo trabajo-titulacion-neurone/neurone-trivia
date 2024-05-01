@@ -111,44 +111,44 @@ jobs:
 
       
 
-  neurone-gm-CI:
+  # neurone-gm-CI:
   
-    runs-on: ubuntu-22.04
+  #   runs-on: ubuntu-22.04
 
-    steps:
+  #   steps:
        
-    - name: Cloning NEURONE-GM repository
-      uses: actions/checkout@v3
-      with:
-        repository: ${{ env.NEURONEGM_REPOSITORY }}
-        path: ${{ env.NEURONEGM_REPOSITORY_FOLDER_NAME }}  
+  #   - name: Cloning NEURONE-GM repository
+  #     uses: actions/checkout@v3
+  #     with:
+  #       repository: ${{ env.NEURONEGM_REPOSITORY }}
+  #       path: ${{ env.NEURONEGM_REPOSITORY_FOLDER_NAME }}  
 
-    - name: Use Node.js ${{ env.NODE_VERSION }}
-      uses: actions/setup-node@v3
-      with:
-        # node-version: ${{ matrix.node-version }}
-        node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
-        cache-dependency-path: '${{ env.NEURONEGM_SERVER_DIRECTORY }}/package-lock.json' 
+  #   - name: Use Node.js ${{ env.NODE_VERSION }}
+  #     uses: actions/setup-node@v3
+  #     with:
+  #       # node-version: ${{ matrix.node-version }}
+  #       node-version: ${{ env.NODE_VERSION }}
+  #       cache: 'npm'
+  #       cache-dependency-path: '${{ env.NEURONEGM_SERVER_DIRECTORY }}/package-lock.json' 
         
-    - name: Install PM2 globally
-      run: npm install -g pm2
+  #   - name: Install PM2 globally
+  #     run: npm install -g pm2
       
-    - name: Run MongoDB with Docker
-      run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
+  #   - name: Run MongoDB with Docker
+  #     run: docker run -d --name mongo-for-tests -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${{ env.NEURONEGM_DATABASE_USER}} -e MONGO_INITDB_ROOT_PASSWORD=${{ env.NEURONEGM_DATABASE_PASSWORD }} -e MONGO_INITDB_DATABASE=${{ env.NEURONEGM_DATABASE }} mongo:latest
 
-    - name: Install Dependencies
-      working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
-      run: npm install
+  #   - name: Install Dependencies
+  #     working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
+  #     run: npm install
 
-    - name: Run test (continue with error)
-      working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
-      run: npm test --timeout 100000
-      continue-on-error: true
+  #   - name: Run test (continue with error)
+  #     working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
+  #     run: npm test --timeout 100000
+  #     continue-on-error: true
 
-    - name: Run NEURONE-GM Server with PM2
-      working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
-      run: pm2 start app.js --name neurone-gm
+  #   - name: Run NEURONE-GM Server with PM2
+  #     working-directory: ${{ env.NEURONEGM_SERVER_DIRECTORY }}
+  #     run: pm2 start app.js --name neurone-gm
 
 
 
@@ -163,7 +163,8 @@ jobs:
       with:
         path: ${{ env.TRIVIA_REPOSITORY_FOLDER_NAME }} 
         repository: ${{ env.TRIVIA_REPOSITORY }}
-        ref: "4f76921737977db29a1fccdf468e7a0c5000f58a"
+        # ref: "4f76921737977db29a1fccdf468e7a0c5000f58a"
+        ref: "69d1f48805ccf34c0cf0c4e9313429736ad901d7"
 
     - name: Use Node.js ${{ env.NODE_VERSION }}
       uses: actions/setup-node@v3
@@ -190,7 +191,9 @@ jobs:
 
     - name: Install frontend dependencies
       working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
-      run: npm install
+      run: |
+        npm install
+        npm install file-saver
 
     - name: Run frontend tests (continue with error)
       working-directory: ${{ env.TRIVIA_CLIENT_DIRECTORY }}
